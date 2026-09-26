@@ -1,24 +1,44 @@
-* {
-    box-sizing: border-box;
+.site-header {
+    background-color: #ffffff;
+    border-bottom: 1px solid #d9e2ec;
 }
 
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background-color: #f4f7f9;
-    color: #1f2933;
-}
-
-main {
-    max-width: 900px;
+.container {
+    width: min(1100px, 92%);
     margin: 0 auto;
-    padding: 40px 20px;
 }
 
-h1 {
-    margin-bottom: 10px;
+.header-content {
+    min-height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
 }
 
-p {
-    color: #52606d;
+.brand {
+    color: #102a43;
+    font-size: 1.25rem;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.main-nav {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.main-nav a {
+    color: #486581;
+    text-decoration: none;
+    font-size: 0.95rem;
+}
+
+.main-nav a:hover {
+    color: #102a43;
+}
+
+.welcome-section {
+    padding: 48px 0;
 }
