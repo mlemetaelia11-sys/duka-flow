@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DukaFlow</title>
+    <title>DukaFlow Dashboard</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -24,11 +24,78 @@
         </div>
     </header>
 
-    <main class="container">
-        <section class="welcome-section">
-            <h1>Welcome to DukaFlow</h1>
-            <p>Manage your products, sales, stock, customers, and debts in one place.</p>
+    <main class="container dashboard">
+
+        <section class="dashboard-heading">
+            <div>
+                <p class="section-label">Dashboard</p>
+                <h1>Welcome to DukaFlow</h1>
+                <p class="section-description">
+                    Here's an overview of your business activity.
+                </p>
+            </div>
         </section>
+
+        <section class="stats-grid" aria-label="Business summary">
+
+            <article class="stat-card">
+                <p class="stat-label">Today's Sales</p>
+                <p class="stat-value">—</p>
+                <p class="stat-note">Waiting for sales data</p>
+            </article>
+
+            <article class="stat-card">
+                <p class="stat-label">Today's Profit</p>
+                <p class="stat-value">—</p>
+                <p class="stat-note">Waiting for sales data</p>
+            </article>
+
+            <article class="stat-card">
+                <p class="stat-label">Number of Sales</p>
+                <p class="stat-value">—</p>
+                <p class="stat-note">Waiting for sales data</p>
+            </article>
+
+            <article class="stat-card">
+                <p class="stat-label">Outstanding Debts</p>
+                <p class="stat-value">—</p>
+                <p class="stat-note">Waiting for debt data</p>
+            </article>
+
+        </section>
+
+        <section class="dashboard-grid">
+
+            <article class="dashboard-card">
+                <div class="card-header">
+                    <div>
+                        <p class="section-label">Inventory</p>
+                        <h2>Low Stock Products</h2>
+                    </div>
+                </div>
+
+                <div class="empty-state">
+                    <p>No stock data available yet.</p>
+                    <span>Products and stock information will appear here.</span>
+                </div>
+            </article>
+
+            <article class="dashboard-card">
+                <div class="card-header">
+                    <div>
+                        <p class="section-label">Activity</p>
+                        <h2>Recent Transactions</h2>
+                    </div>
+                </div>
+
+                <div class="empty-state">
+                    <p>No transactions available yet.</p>
+                    <span>Sales will appear here once the database is connected.</span>
+                </div>
+            </article>
+
+        </section>
+
     </main>
 
 </body>
