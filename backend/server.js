@@ -4,11 +4,12 @@ const path = require("path");
 const app = express();
 
 const PORT = 3000;
+const HOST = "0.0.0.0";
 
 const frontendPath = path.join(__dirname, "..", "frontend");
 
 app.use(express.static(frontendPath));
 
-app.listen(PORT, () => {
+app.listen(PORT, HOST, () => {
     console.log(`DukaFlow server is running on http://localhost:${PORT}`);
 });
