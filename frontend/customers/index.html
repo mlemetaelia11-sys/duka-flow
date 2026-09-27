@@ -35,9 +35,13 @@
                 </p>
             </div>
 
-            <button class="primary-button" type="button">
-                Add Customer
-            </button>
+            <button
+    id="open-customer-modal"
+    class="primary-button"
+    type="button"
+>
+    Add Customer
+</button>
         </section>
 
         <section class="customers-card">
@@ -70,7 +74,7 @@
                         </tr>
                     </thead>
 
-                    <tbody>
+                    <tbody id="customers-table-body">
 
                         <tr>
                             <td colspan="6">
@@ -95,6 +99,103 @@
         </section>
 
     </main>
+
+    <div
+    id="customer-modal"
+    class="modal"
+    aria-hidden="true"
+>
+    <div
+        class="modal-overlay"
+        data-close-customer-modal
+    ></div>
+
+    <section
+        class="modal-content"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="customer-modal-title"
+    >
+        <div class="modal-header">
+            <div>
+                <p class="section-label">Customers</p>
+                <h2 id="customer-modal-title">Add Customer</h2>
+            </div>
+
+            <button
+                class="modal-close"
+                type="button"
+                data-close-customer-modal
+                aria-label="Close dialog"
+            >
+                ×
+            </button>
+        </div>
+
+        <form id="customer-form">
+
+            <label class="form-field">
+                <span>Customer Name</span>
+
+                <input
+                    type="text"
+                    id="customer-name"
+                    name="customer-name"
+                    required
+                >
+            </label>
+
+            <label class="form-field">
+                <span>Phone Number</span>
+
+                <input
+                    type="tel"
+                    id="customer-phone"
+                    name="customer-phone"
+                    placeholder="e.g. 0712345678"
+                    required
+                >
+            </label>
+
+            <div
+                id="customer-form-message"
+                class="form-message"
+                role="alert"
+                aria-live="polite"
+            ></div>
+
+            <div class="modal-actions">
+
+                <button
+                    class="secondary-button"
+                    type="button"
+                    data-close-customer-modal
+                >
+                    Cancel
+                </button>
+
+                <button
+                    class="primary-button"
+                    type="submit"
+                >
+                    Add Customer
+                </button>
+
+            </div>
+
+        </form>
+    </section>
+</div>
+
+<script src="../js/customers.js"></script>
+
+<button
+    id="open-customer-modal"
+    class="primary-button"
+    type="button"
+>
+    Add Customer
+</button>
 
 </body>
 </html>
