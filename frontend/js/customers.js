@@ -8,8 +8,25 @@ const customerForm = document.querySelector("#customer-form");
 const customerFormMessage = document.querySelector("#customer-form-message");
 
 const customersTableBody = document.querySelector("#customers-table-body");
+const customerSearchInput = document.querySelector("#customer-search");
 
 const customers = [];
+function getFilteredCustomers() {
+    if (!customerSearchInput) {
+        return customers;
+    }
+
+    const searchTerm = customerSearchInput.value.trim().toLowerCase();
+
+    if (searchTerm === "") {
+        return customers;
+    }
+
+    return customers.filter((customer) =>
+        customer.name.toLowerCase().includes(searchTerm) ||
+        customer.phone.toLowerCase().includes(searchTerm)
+    );
+}
 
 
 function openCustomerModal() {
@@ -19,12 +36,22 @@ function openCustomerModal() {
 
     customerModal.classList.add("is-open");
     customerModal.setAttribute("aria-hidden", "false");
+
+    const customerName = document.querySelector("#customer-name");
+
+    if (customerName) {
+        customerName.focus();
+    }
 }
 
 
 function closeCustomerModal() {
     if (!customerModal) {
         return;
+    }
+
+    if (openCustomerModalButton) {
+        openCustomerModalButton.focus();
     }
 
     customerModal.classList.remove("is-open");
@@ -90,7 +117,9 @@ function renderCustomers() {
         return;
     }
 
-    if (customers.length === 0) {
+    const filteredCustomers = getFilteredCustomers();
+
+    if (filteredCustomers.length === 0) {
         customersTableBody.innerHTML = `
             <tr>
                 <td colspan="6">
@@ -109,7 +138,7 @@ function renderCustomers() {
 
     customersTableBody.innerHTML = "";
 
-    customers.forEach((customer) => {
+    filteredCustomers.forEach((customer) => {
         const row = document.createElement("tr");
 
         row.innerHTML = `
@@ -159,6 +188,12 @@ function addCustomerFromForm() {
     };
 
     customers.push(customer);
+
+    if (customerSearchInput) {
+    customerSearchInput.addEventListener("input", () => {
+        renderCustomers();
+    });
+}
 
     renderCustomers();
 
