@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customers | DukaFlow</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+    <header class="site-header">
+        <div class="container header-content">
+
+            <a class="brand" href="/">DukaFlow</a>
+
+            <nav class="main-nav" aria-label="Main navigation">
+                <a href="/">Dashboard</a>
+                <a href="/products/">Products</a>
+                <a href="/sales/">Sales</a>
+                <a href="/customers/">Customers</a>
+                <a href="/debts/">Debts</a>
+            </nav>
+
+        </div>
+    </header>
+
+    <main class="container page-content">
+
+        <section class="page-heading">
+            <div>
+                <p class="section-label">Customers</p>
+                <h1>Customers</h1>
+                <p class="section-description">
+                    Manage customers and view their purchase and debt information.
+                </p>
+            </div>
+
+            <button class="primary-button" type="button">
+                Add Customer
+            </button>
+        </section>
+
+        <section class="customers-card">
+
+            <div class="customers-toolbar">
+
+                <label class="search-field">
+                    <span>Search customers</span>
+                    <input
+                        type="search"
+                        placeholder="Search by name or phone..."
+                        aria-label="Search customers"
+                    >
+                </label>
+
+            </div>
+
+            <div class="table-wrapper">
+
+                <table class="customers-table">
+
+                    <thead>
+                        <tr>
+                            <th scope="col">Customer</th>
+                            <th scope="col">Phone</th>
+                            <th scope="col">Total Purchases</th>
+                            <th scope="col">Outstanding Debt</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        <tr>
+                            <td colspan="6">
+
+                                <div class="table-empty-state">
+                                    <strong>No customers yet</strong>
+
+                                    <span>
+                                        Customers will appear here after they are added.
+                                    </span>
+                                </div>
+
+                            </td>
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</body>
+</html>
