@@ -661,3 +661,14 @@
         width: 100%;
     }
 }
+
+.form-message {
+    min-height: 22px;
+    margin-top: 16px;
+    color: #9b2c2c;
+    font-size: 0.9rem;
+}
+
+.form-message.success {
+    color: #276749;
+}
