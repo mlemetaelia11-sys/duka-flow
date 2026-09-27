@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debts | DukaFlow</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+    <header class="site-header">
+        <div class="container header-content">
+
+            <a class="brand" href="/">DukaFlow</a>
+
+            <nav class="main-nav" aria-label="Main navigation">
+                <a href="/">Dashboard</a>
+                <a href="/products/">Products</a>
+                <a href="/sales/">Sales</a>
+                <a href="/customers/">Customers</a>
+                <a href="/debts/">Debts</a>
+            </nav>
+
+        </div>
+    </header>
+
+    <main class="container page-content">
+
+        <section class="page-heading">
+            <div>
+                <p class="section-label">Credit Management</p>
+                <h1>Debts</h1>
+                <p class="section-description">
+                    Track customer balances, payments, and outstanding credit.
+                </p>
+            </div>
+
+            <button class="primary-button" type="button">
+                Record Payment
+            </button>
+        </section>
+
+        <section class="debt-summary-grid">
+
+            <article class="debt-summary-card">
+                <p class="stat-label">Total Outstanding</p>
+                <p class="stat-value">—</p>
+                <p class="stat-note">Waiting for debt data</p>
+            </article>
+
+            <article class="debt-summary-card">
+                <p class="stat-label">Customers With Debt</p>
+                <p class="stat-value">—</p>
+                <p class="stat-note">Waiting for customer data</p>
+            </article>
+
+            <article class="debt-summary-card">
+                <p class="stat-label">Overdue Debts</p>
+                <p class="stat-value">—</p>
+                <p class="stat-note">Waiting for debt data</p>
+            </article>
+
+        </section>
+
+        <section class="debts-card">
+
+            <div class="debts-toolbar">
+
+                <label class="search-field">
+                    <span>Search debts</span>
+                    <input
+                        type="search"
+                        placeholder="Search by customer name or phone..."
+                        aria-label="Search debts"
+                    >
+                </label>
+
+                <label class="filter-field">
+                    <span>Status</span>
+
+                    <select id="debt-status-filter" name="status">
+                        <option value="all">All statuses</option>
+                        <option value="unpaid">Unpaid</option>
+                        <option value="partial">Partially Paid</option>
+                        <option value="paid">Paid</option>
+                        <option value="overdue">Overdue</option>
+                    </select>
+                </label>
+
+            </div>
+
+            <div class="table-wrapper">
+
+                <table class="debts-table">
+
+                    <thead>
+                        <tr>
+                            <th scope="col">Customer</th>
+                            <th scope="col">Original Debt</th>
+                            <th scope="col">Paid</th>
+                            <th scope="col">Remaining</th>
+                            <th scope="col">Due Date</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        <tr>
+                            <td colspan="7">
+
+                                <div class="table-empty-state">
+                                    <strong>No debts yet</strong>
+
+                                    <span>
+                                        Customer credit records will appear here.
+                                    </span>
+                                </div>
+
+                            </td>
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</body>
+</html>

@@ -474,3 +474,105 @@
         max-width: none;
     }
 }
+
+.debt-summary-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+    margin-bottom: 28px;
+}
+
+.debt-summary-card {
+    padding: 24px;
+    background-color: #ffffff;
+    border: 1px solid #d9e2ec;
+    border-radius: 10px;
+}
+
+.debts-card {
+    background-color: #ffffff;
+    border: 1px solid #d9e2ec;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.debts-toolbar {
+    display: flex;
+    align-items: flex-end;
+    gap: 20px;
+    padding: 20px;
+    border-bottom: 1px solid #d9e2ec;
+}
+
+.filter-field {
+    display: block;
+    min-width: 180px;
+}
+
+.filter-field span {
+    display: block;
+    margin-bottom: 8px;
+    color: #334e68;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.filter-field select {
+    width: 100%;
+    padding: 11px 12px;
+    border: 1px solid #bcccdc;
+    border-radius: 7px;
+    background-color: #ffffff;
+    color: #102a43;
+    font: inherit;
+}
+
+.filter-field select:focus {
+    outline: 2px solid #9fb3c8;
+    outline-offset: 1px;
+}
+
+.debts-table {
+    width: 100%;
+    min-width: 900px;
+    border-collapse: collapse;
+}
+
+.debts-table th,
+.debts-table td {
+    padding: 16px 20px;
+    text-align: left;
+    border-bottom: 1px solid #e4e7eb;
+}
+
+.debts-table th {
+    background-color: #f8fafc;
+    color: #486581;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.debts-table td {
+    color: #334e68;
+}
+
+@media (max-width: 900px) {
+    .debt-summary-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .debts-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .debts-toolbar .search-field {
+        max-width: none;
+    }
+
+    .filter-field {
+        min-width: 0;
+    }
+}
