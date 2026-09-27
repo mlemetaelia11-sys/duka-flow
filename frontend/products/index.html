@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products | DukaFlow</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+    <header class="site-header">
+        <div class="container header-content">
+
+            <a class="brand" href="/">DukaFlow</a>
+
+            <nav class="main-nav" aria-label="Main navigation">
+                <a href="/">Dashboard</a>
+                <a href="/products/">Products</a>
+                <a href="/sales/">Sales</a>
+                <a href="/customers/">Customers</a>
+                <a href="/debts/">Debts</a>
+            </nav>
+
+        </div>
+    </header>
+
+    <main class="container page-content">
+
+        <section class="page-heading">
+            <div>
+                <p class="section-label">Inventory</p>
+                <h1>Products</h1>
+                <p class="section-description">
+                    Manage the products and stock in your business.
+                </p>
+            </div>
+
+            <button class="primary-button" type="button">
+                Add Product
+            </button>
+        </section>
+
+        <section class="products-card">
+
+            <div class="products-toolbar">
+                <label class="search-field">
+                    <span>Search products</span>
+                    <input
+                        type="search"
+                        placeholder="Search by product name..."
+                        aria-label="Search products"
+                    >
+                </label>
+            </div>
+
+            <div class="table-wrapper">
+                <table class="products-table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Product</th>
+                            <th scope="col">Buying Price</th>
+                            <th scope="col">Selling Price</th>
+                            <th scope="col">Stock</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr>
+                            <td colspan="6">
+                                <div class="table-empty-state">
+                                    <strong>No products yet</strong>
+                                    <span>
+                                        Products will appear here after they are added.
+                                    </span>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </section>
+
+    </main>
+
+</body>
+</html>

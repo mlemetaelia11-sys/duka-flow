@@ -143,3 +143,136 @@
         padding-top: 32px;
     }
 }
+
+.page-content {
+    padding-top: 40px;
+    padding-bottom: 60px;
+}
+
+.page-heading {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 32px;
+}
+
+.page-heading h1 {
+    margin: 0 0 8px;
+}
+
+.primary-button {
+    border: 0;
+    border-radius: 8px;
+    padding: 11px 18px;
+    background-color: #102a43;
+    color: #ffffff;
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.primary-button:hover {
+    background-color: #243b53;
+}
+
+.products-card {
+    background-color: #ffffff;
+    border: 1px solid #d9e2ec;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.products-toolbar {
+    padding: 20px;
+    border-bottom: 1px solid #d9e2ec;
+}
+
+.search-field {
+    display: block;
+    max-width: 420px;
+}
+
+.search-field span {
+    display: block;
+    margin-bottom: 8px;
+    color: #334e68;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.search-field input {
+    width: 100%;
+    padding: 11px 12px;
+    border: 1px solid #bcccdc;
+    border-radius: 7px;
+    font: inherit;
+    color: #102a43;
+    background-color: #ffffff;
+}
+
+.search-field input:focus {
+    outline: 2px solid #9fb3c8;
+    outline-offset: 1px;
+}
+
+.table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.products-table {
+    width: 100%;
+    min-width: 760px;
+    border-collapse: collapse;
+}
+
+.products-table th,
+.products-table td {
+    padding: 16px 20px;
+    text-align: left;
+    border-bottom: 1px solid #e4e7eb;
+}
+
+.products-table th {
+    background-color: #f8fafc;
+    color: #486581;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.products-table td {
+    color: #334e68;
+}
+
+.table-empty-state {
+    min-height: 180px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    text-align: center;
+}
+
+.table-empty-state strong {
+    color: #334e68;
+}
+
+.table-empty-state span {
+    color: #829ab1;
+    font-size: 0.9rem;
+}
+
+@media (max-width: 700px) {
+    .page-heading {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .primary-button {
+        width: 100%;
+    }
+}
