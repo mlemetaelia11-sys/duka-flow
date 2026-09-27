@@ -10,7 +10,11 @@ const customerFormMessage = document.querySelector("#customer-form-message");
 const customersTableBody = document.querySelector("#customers-table-body");
 const customerSearchInput = document.querySelector("#customer-search");
 
-const customers = [];
+const savedCustomers = localStorage.getItem("dukaflow_customers");
+
+const customers = savedCustomers
+    ? JSON.parse(savedCustomers)
+    : [];
 function getFilteredCustomers() {
     if (!customerSearchInput) {
         return customers;
@@ -187,13 +191,14 @@ function addCustomerFromForm() {
         phone: customerPhone.value.trim()
     };
 
-    customers.push(customer);
+   customers.push(customer);
 
-    if (customerSearchInput) {
-    customerSearchInput.addEventListener("input", () => {
-        renderCustomers();
-    });
-}
+localStorage.setItem(
+    "dukaflow_customers",
+    JSON.stringify(customers)
+);
+
+renderCustomers();
 
     renderCustomers();
 
@@ -246,10 +251,14 @@ if (customersTableBody) {
         if (customerIndex === -1) {
             return;
         }
+customers.splice(customerIndex, 1);
 
-        customers.splice(customerIndex, 1);
+localStorage.setItem(
+    "dukaflow_customers",
+    JSON.stringify(customers)
+);
 
-        renderCustomers();
+renderCustomers();
     });
 }
 
