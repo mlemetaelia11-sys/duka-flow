@@ -672,3 +672,18 @@
 .form-message.success {
     color: #276749;
 }
+
+.table-action-button {
+    border: 0;
+    padding: 6px 0;
+    background: transparent;
+    color: #9b2c2c;
+    font: inherit;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.table-action-button:hover {
+    text-decoration: underline;
+}
