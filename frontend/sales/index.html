@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sales | DukaFlow</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+    <header class="site-header">
+        <div class="container header-content">
+
+            <a class="brand" href="/">DukaFlow</a>
+
+            <nav class="main-nav" aria-label="Main navigation">
+                <a href="/">Dashboard</a>
+                <a href="/products/">Products</a>
+                <a href="/sales/">Sales</a>
+                <a href="/customers/">Customers</a>
+                <a href="/debts/">Debts</a>
+            </nav>
+
+        </div>
+    </header>
+
+    <main class="container page-content">
+
+        <section class="page-heading">
+            <div>
+                <p class="section-label">Transactions</p>
+                <h1>Sales</h1>
+                <p class="section-description">
+                    Create sales and record customer payments.
+                </p>
+            </div>
+        </section>
+
+        <section class="sales-layout">
+
+            <article class="sales-card">
+                <div class="card-header">
+                    <p class="section-label">New Sale</p>
+                    <h2>Create Sale</h2>
+                </div>
+
+                <form id="sale-form">
+
+                    <div class="form-grid">
+
+                        <label class="form-field">
+                            <span>Product</span>
+                            <select id="product-select" name="product" required>
+                                <option value="">Select a product</option>
+                            </select>
+                        </label>
+
+                        <label class="form-field">
+                            <span>Quantity</span>
+                            <input
+                                id="quantity-input"
+                                name="quantity"
+                                type="number"
+                                min="1"
+                                step="1"
+                                value="1"
+                                required
+                            >
+                        </label>
+
+                    </div>
+
+                    <button class="secondary-button" type="submit">
+                        Add Item
+                    </button>
+
+                </form>
+            </article>
+
+            <article class="sales-card">
+                <div class="card-header">
+                    <p class="section-label">Cart</p>
+                    <h2>Selected Items</h2>
+                </div>
+
+                <div class="table-wrapper">
+                    <table class="sales-table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Product</th>
+                                <th scope="col">Qty</th>
+                                <th scope="col">Unit Price</th>
+                                <th scope="col">Total</th>
+                                <th scope="col">Action</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr>
+                                <td colspan="5">
+                                    <div class="table-empty-state">
+                                        <strong>No items added</strong>
+                                        <span>
+                                            Selected products will appear here.
+                                        </span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </article>
+
+            <article class="sales-card sale-summary-card">
+                <div class="card-header">
+                    <p class="section-label">Payment</p>
+                    <h2>Sale Summary</h2>
+                </div>
+
+                <label class="form-field">
+                    <span>Payment Method</span>
+                    <select id="payment-method" name="payment-method">
+                        <option value="cash">Cash</option>
+                        <option value="mobile_money">Mobile Money</option>
+                        <option value="bank">Bank</option>
+                        <option value="credit">Credit</option>
+                    </select>
+                </label>
+
+                <div class="sale-total">
+                    <span>Total</span>
+                    <strong>—</strong>
+                </div>
+
+                <button class="primary-button" type="button">
+                    Record Sale
+                </button>
+            </article>
+
+        </section>
+
+    </main>
+
+</body>
+</html>

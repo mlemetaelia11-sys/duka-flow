@@ -276,3 +276,149 @@
         width: 100%;
     }
 }
+
+.sales-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+    gap: 20px;
+}
+
+.sales-card {
+    padding: 24px;
+    background-color: #ffffff;
+    border: 1px solid #d9e2ec;
+    border-radius: 10px;
+}
+
+.sales-card .card-header {
+    margin-bottom: 24px;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.form-field {
+    display: block;
+}
+
+.form-field span {
+    display: block;
+    margin-bottom: 8px;
+    color: #334e68;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.form-field input,
+.form-field select {
+    width: 100%;
+    padding: 11px 12px;
+    border: 1px solid #bcccdc;
+    border-radius: 7px;
+    background-color: #ffffff;
+    color: #102a43;
+    font: inherit;
+}
+
+.form-field input:focus,
+.form-field select:focus {
+    outline: 2px solid #9fb3c8;
+    outline-offset: 1px;
+}
+
+.secondary-button {
+    border: 1px solid #9fb3c8;
+    border-radius: 8px;
+    padding: 10px 16px;
+    background-color: #ffffff;
+    color: #243b53;
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.secondary-button:hover {
+    background-color: #f0f4f8;
+}
+
+.sales-table {
+    width: 100%;
+    min-width: 650px;
+    border-collapse: collapse;
+}
+
+.sales-table th,
+.sales-table td {
+    padding: 14px 16px;
+    text-align: left;
+    border-bottom: 1px solid #e4e7eb;
+}
+
+.sales-table th {
+    background-color: #f8fafc;
+    color: #486581;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.sale-summary-card {
+    grid-column: 1 / -1;
+}
+
+.sale-summary-card .form-field {
+    max-width: 320px;
+    margin-bottom: 24px;
+}
+
+.sale-total {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #d9e2ec;
+}
+
+.sale-total span {
+    color: #627d98;
+    font-weight: 600;
+}
+
+.sale-total strong {
+    color: #102a43;
+    font-size: 1.8rem;
+}
+
+@media (max-width: 900px) {
+    .sales-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .sale-summary-card {
+        grid-column: auto;
+    }
+}
+
+@media (max-width: 700px) {
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .sales-card {
+        padding: 20px;
+    }
+
+    .sale-summary-card .form-field {
+        max-width: none;
+    }
+
+    .sale-summary-card .primary-button {
+        width: 100%;
+    }
+}
