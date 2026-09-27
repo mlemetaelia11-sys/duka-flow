@@ -35,9 +35,13 @@
                 </p>
             </div>
 
-            <button class="primary-button" type="button">
-                Add Product
-            </button>
+           <button
+    id="open-product-modal"
+    class="primary-button"
+    type="button"
+>
+    Add Product
+</button>
         </section>
 
         <section class="products-card">
@@ -84,6 +88,113 @@
         </section>
 
     </main>
+
+        <div
+        id="product-modal"
+        class="modal"
+        aria-hidden="true"
+    >
+        <div
+            class="modal-overlay"
+            data-close-modal
+        ></div>
+
+        <section
+            class="modal-content"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="product-modal-title"
+        >
+            <div class="modal-header">
+                <div>
+                    <p class="section-label">Inventory</p>
+                    <h2 id="product-modal-title">Add Product</h2>
+                </div>
+
+                <button
+                    class="modal-close"
+                    type="button"
+                    data-close-modal
+                    aria-label="Close dialog"
+                >
+                    ×
+                </button>
+            </div>
+
+            <form id="product-form">
+
+                <div class="form-grid">
+
+                    <label class="form-field">
+                        <span>Product Name</span>
+                        <input
+                            type="text"
+                            id="product-name"
+                            name="product-name"
+                            required
+                        >
+                    </label>
+
+                    <label class="form-field">
+                        <span>Buying Price</span>
+                        <input
+                            type="number"
+                            id="buying-price"
+                            name="buying-price"
+                            min="0"
+                            step="0.01"
+                            required
+                        >
+                    </label>
+
+                    <label class="form-field">
+                        <span>Selling Price</span>
+                        <input
+                            type="number"
+                            id="selling-price"
+                            name="selling-price"
+                            min="0"
+                            step="0.01"
+                            required
+                        >
+                    </label>
+
+                    <label class="form-field">
+                        <span>Stock Quantity</span>
+                        <input
+                            type="number"
+                            id="stock-quantity"
+                            name="stock-quantity"
+                            min="0"
+                            step="1"
+                            required
+                        >
+                    </label>
+
+                </div>
+
+                <div class="modal-actions">
+                    <button
+                        class="secondary-button"
+                        type="button"
+                        data-close-modal
+                    >
+                        Cancel
+                    </button>
+
+                    <button
+                        class="primary-button"
+                        type="submit"
+                    >
+                        Add Product
+                    </button>
+                </div>
+
+            </form>
+        </section>
+    </div>
+
+    <script src="../js/app.js"></script>
 
 </body>
 </html>
