@@ -576,3 +576,9 @@
         min-width: 0;
     }
 }
+
+.current-date {
+    margin: 16px 0 0;
+    color: #829ab1;
+    font-size: 0.9rem;
+}
