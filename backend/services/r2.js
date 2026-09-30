@@ -17,6 +17,8 @@ function config() {
         endpoint,
         region: "auto",
         forcePathStyle: true,
+        requestChecksumCalculation: "WHEN_REQUIRED",
+        responseChecksumValidation: "WHEN_REQUIRED",
         credentials: { accessKeyId, secretAccessKey }
     });
 
