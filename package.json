@@ -1,0 +1,23 @@
+{
+  "name": "dukaflow",
+  "version": "1.0.0",
+  "private": true,
+  "description": "DukaFlow retail management SaaS",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "migrate": "node backend/scripts/migrate.js",
+    "test:full": "node backend/tests/full-system-test.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "cookie-parser": "^1.4.7",
+    "dotenv": "^18.0.4",
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3",
+    "pg": "^8.23.0"
+  }
+}

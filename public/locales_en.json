@@ -1,0 +1,13 @@
+{
+  "dashboard": "Dashboard",
+  "sales": "Sales",
+  "inventory": "Inventory",
+  "customers": "Customers",
+  "debts": "Debts",
+  "expenses": "Expenses",
+  "reports": "Reports",
+  "staff": "Staff",
+  "payments": "Payments",
+  "settings": "Settings",
+  "copilot": "DukaFlow Copilot"
+}

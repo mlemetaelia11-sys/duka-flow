@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0f172a">
+    <title>Customer Display | DukaFlow</title>
+    <link rel="manifest" href="../manifest.json">
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        body.customer-display-page { background: #0f172a; color: #f8fafc; }
+        .display-shell { min-height: 100vh; display: grid; place-items: center; padding: 32px; }
+        .display-card { width: min(980px, 100%); border-radius: 28px; padding: 36px; background: #fff; color: #0f172a; box-shadow: 0 24px 70px rgba(0,0,0,.30); }
+        .display-brand { display:flex; justify-content:space-between; gap:20px; align-items:flex-start; margin-bottom:28px; }
+        .display-brand h1 { margin:0; font-size:clamp(26px,4vw,42px); }
+        .display-total { display:flex; justify-content:space-between; align-items:center; border-top:1px solid #e2e8f0; margin-top:22px; padding-top:22px; font-size:24px; }
+        .display-total strong { font-size:clamp(30px,5vw,48px); }
+        .display-table { width:100%; border-collapse:collapse; }
+        .display-table th,.display-table td { padding:14px 10px; border-bottom:1px solid #e2e8f0; text-align:left; }
+        .display-table th:last-child,.display-table td:last-child { text-align:right; }
+        .display-empty { padding:70px 15px; text-align:center; color:#64748b; }
+        .display-status { display:inline-flex; padding:7px 11px; border-radius:999px; background:#e2e8f0; color:#334155; font-size:13px; }
+    </style>
+    <link rel="icon" href="/assets/dukaflow-icon.png" type="image/png">
+</head>
+<body class="customer-display-page">
+<div class="display-shell">
+    <section class="display-card">
+        <div class="display-brand">
+            <div>
+                <p class="section-label">Customer Display</p>
+                <h1 id="display-business-name">DukaFlow</h1>
+            </div>
+            <span id="display-status" class="display-status">Waiting for cart</span>
+        </div>
+
+        <div id="display-empty" class="display-empty">
+            <h2>Welcome</h2>
+            <p>Your items will appear here during checkout.</p>
+        </div>
+
+        <div id="display-content" hidden>
+            <div class="table-wrapper">
+                <table class="display-table">
+                    <thead><tr><th>Item</th><th>Qty</th><th>Price</th><th>Total</th></tr></thead>
+                    <tbody id="display-items"></tbody>
+                </table>
+            </div>
+            <div class="display-total">
+                <span>Total</span>
+                <strong id="display-total">TSh 0</strong>
+            </div>
+        </div>
+    </section>
+</div>
+<script>
+"use strict";
+(() => {
+    const channel = "BroadcastChannel" in window ? new BroadcastChannel("dukaflow-customer-display") : null;
+    const empty = document.querySelector("#display-empty");
+    const content = document.querySelector("#display-content");
+    const items = document.querySelector("#display-items");
+    const total = document.querySelector("#display-total");
+    const status = document.querySelector("#display-status");
+    const businessName = document.querySelector("#display-business-name");
+
+    const esc = (value) => String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+
+    const money = (value) => `TSh ${Number(value || 0).toLocaleString("en-TZ", { maximumFractionDigits: 2 })}`;
+
+    function render(payload = {}) {
+        businessName.textContent = payload.businessName || "DukaFlow";
+        const cart = Array.isArray(payload.items) ? payload.items : [];
+        if (!cart.length) {
+            empty.hidden = false;
+            content.hidden = true;
+            status.textContent = "Ready for next customer";
+            return;
+        }
+        empty.hidden = true;
+        content.hidden = false;
+        status.textContent = "Review your order";
+        items.innerHTML = cart.map((item) => {
+            const quantity = Number(item.quantity || 0);
+            const price = Number(item.unitPrice || 0);
+            return `<tr><td>${esc(item.name)}</td><td>${quantity}</td><td>${money(price)}</td><td>${money(quantity * price)}</td></tr>`;
+        }).join("");
+        total.textContent = money(payload.total || 0);
+    }
+
+    if (channel) {
+        channel.onmessage = (event) => {
+            if (event.data?.type === "cart") render(event.data.payload);
+            if (event.data?.type === "complete") render({ businessName: event.data.businessName, items: [] });
+        };
+    }
+
+    window.addEventListener("storage", () => {});
+    render({});
+})();
+</script>
+<script src="/js/i18n.js"></script></body>
+</html>

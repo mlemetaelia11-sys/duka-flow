@@ -122,7 +122,7 @@ app.get("/api/health/db", async (req, res) => {
     }
 });
 
-const frontendPath = path.join(__dirname, "..", "frontend");
+const frontendPath = path.join(__dirname, "..", "public");
 app.use(express.static(frontendPath, {
     extensions: ["html"],
     maxAge: process.env.NODE_ENV === "production" ? "1d" : 0
@@ -143,12 +143,14 @@ app.use((error, req, res, next) => {
     return res.status(500).json({ message: "Internal server error." });
 });
 
-const server = app.listen(PORT, HOST, () => {
-    console.log(`DukaFlow server running on http://localhost:${PORT}`);
-});
+if (!process.env.VERCEL) {
+    const server = app.listen(PORT, HOST, () => {
+        console.log(`DukaFlow server running on http://localhost:${PORT}`);
+    });
 
-server.on("error", (error) => {
-    console.error("SERVER ERROR:", error);
-});
+    server.on("error", (error) => {
+        console.error("SERVER ERROR:", error);
+    });
+}
 
 module.exports = app;

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Users | DukaFlow</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="icon" href="/assets/dukaflow-icon.png" type="image/png">
+</head>
+<body>
+    <header class="site-header">
+        <div class="container header-content">
+            <a class="brand" href="/">DukaFlow</a>
+            <nav class="main-nav" aria-label="Main navigation">
+                <a href="/">Dashboard</a>
+                <a href="/products/">Products</a>
+                <a href="/sales/">Sales</a>
+                <a href="/customers/">Customers</a>
+                <a href="/debts/">Debts</a>
+                <a href="/suppliers/">Suppliers</a>
+                <a href="/purchases/">Purchases</a>
+                <a href="/reports/">Reports</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container page-content">
+        <section class="page-heading">
+            <div>
+                <p class="section-label">Administration</p>
+                <h1>Users</h1>
+                <p class="section-description">Manage staff accounts and permissions.</p>
+            </div>
+            <button id="open-user-modal" class="primary-button" type="button">Add User</button>
+        </section>
+
+        <section class="products-card" aria-label="Users">
+            <div class="table-wrapper">
+                <table class="products-table users-table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Name</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">Role</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Last Login</th>
+                            <th scope="col">Created</th>
+                            <th scope="col">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="users-table-body">
+                        <tr><td colspan="7">Loading users...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <div id="user-modal" class="modal" aria-hidden="true">
+        <div class="modal-overlay" data-close-user-modal></div>
+        <section class="modal-content" role="dialog" aria-modal="true" aria-labelledby="user-modal-title">
+            <div class="modal-header">
+                <div>
+                    <p class="section-label">Staff access</p>
+                    <h2 id="user-modal-title">Add User</h2>
+                </div>
+                <button class="modal-close" type="button" data-close-user-modal aria-label="Close dialog">×</button>
+            </div>
+
+            <form id="user-form">
+                <label class="form-field">
+                    <span>Name</span>
+                    <input id="user-name" name="name" autocomplete="name" required minlength="2" maxlength="150">
+                </label>
+                <label class="form-field">
+                    <span>Email</span>
+                    <input id="user-email" name="email" type="email" autocomplete="email" required>
+                </label>
+                <label class="form-field">
+                    <span>Password <small id="user-password-hint">At least 10 characters</small></span>
+                    <input id="user-password" name="password" type="password" autocomplete="new-password" minlength="10">
+                </label>
+                <label class="form-field">
+                    <span>Role</span>
+                    <select id="user-role" name="role" required>
+                        <option value="owner">Owner</option>
+                        <option value="manager">Manager</option>
+                        <option value="cashier">Cashier</option>
+                    </select>
+                </label>
+                <p id="user-form-message" class="form-message" role="alert" aria-live="polite"></p>
+                <div class="modal-actions">
+                    <button class="secondary-button" type="button" data-close-user-modal>Cancel</button>
+                    <button id="user-submit" class="primary-button" type="submit">Add User</button>
+                </div>
+            </form>
+        </section>
+    </div>
+
+    <script src="../js/auth.js"></script>
+    <script src="../js/users.js"></script>
+    <script src="/js/offline-sync.js"></script>
+<script src="/js/i18n.js"></script></body>
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0f172a">
+    <title>Supplier Payments | DukaFlow</title>
+    <link rel="manifest" href="../manifest.json">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="icon" href="/assets/dukaflow-icon.png" type="image/png">
+</head>
+<body>
+<div class="app-layout">
+    <aside class="sidebar">
+        <div class="sidebar-brand"><h2>DukaFlow</h2><span>Retail Management</span></div>
+        <nav class="sidebar-nav"></nav>
+    </aside>
+    <main class="main-content">
+        <header class="page-header">
+            <div>
+                <p class="section-label">Suppliers</p>
+                <h1>Supplier Payments</h1>
+                <p>Track outstanding supplier balances and record payments.</p>
+            </div>
+        </header>
+
+        <section class="stats-grid">
+            <article class="stat-card"><p class="stat-label">Suppliers Owed</p><h2 id="payable-suppliers" class="stat-value">0</h2></article>
+            <article class="stat-card"><p class="stat-label">Outstanding</p><h2 id="payable-total" class="stat-value">TSh 0</h2></article>
+            <article class="stat-card"><p class="stat-label">Open Purchases</p><h2 id="payable-purchases" class="stat-value">0</h2></article>
+        </section>
+
+        <section class="card">
+            <div class="card-header"><div><p class="section-label">Accounts Payable</p><h2>Supplier Balances</h2></div></div>
+            <div class="table-wrapper">
+                <table class="data-table">
+                    <thead><tr><th>Supplier</th><th>Open Purchases</th><th>Total Purchases</th><th>Outstanding</th><th>Action</th></tr></thead>
+                    <tbody id="payables-body"><tr><td colspan="5">Loading...</td></tr></tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="card">
+            <div class="card-header"><div><p class="section-label">Record Payment</p><h2>Pay Supplier</h2></div></div>
+            <form id="supplier-payment-form">
+                <div class="form-grid">
+                    <label class="form-field"><span>Purchase</span><select id="supplier-payment-purchase" required><option value="">Select purchase</option></select></label>
+                    <label class="form-field"><span>Amount</span><input id="supplier-payment-amount" type="number" min="0.01" step="0.01" required></label>
+                    <label class="form-field"><span>Payment Method</span><select id="supplier-payment-method"><option value="cash">Cash</option><option value="mobile_money">Mobile Money</option><option value="bank">Bank</option></select></label>
+                    <label class="form-field"><span>Reference</span><input id="supplier-payment-reference" maxlength="100" placeholder="Receipt / transaction reference"></label>
+                    <label class="form-field"><span>Notes</span><input id="supplier-payment-notes" maxlength="255"></label>
+                </div>
+                <p id="supplier-payment-message" class="form-message" role="alert"></p>
+                <button id="supplier-payment-submit" class="primary-button" type="submit">Record Payment</button>
+            </form>
+        </section>
+
+        <section class="card">
+            <div class="card-header"><div><p class="section-label">History</p><h2>Recent Supplier Payments</h2></div></div>
+            <div class="table-wrapper">
+                <table class="data-table">
+                    <thead><tr><th>Date</th><th>Supplier</th><th>Purchase</th><th>Amount</th><th>Method</th><th>Reference</th><th>User</th></tr></thead>
+                    <tbody id="supplier-payments-body"><tr><td colspan="7">Select a supplier to view payment history.</td></tr></tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+</div>
+<script src="../js/auth.js"></script>
+<script src="../js/supplier-payments.js"></script>
+    <script src="/js/offline-sync.js"></script>
+<script src="/js/i18n.js"></script></body>
+</html>

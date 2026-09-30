@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0f172a">
+    <title>Business Insights | DukaFlow</title>
+    <link rel="manifest" href="../manifest.json">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="icon" href="/assets/dukaflow-icon.png" type="image/png">
+</head>
+<body>
+<div class="app-layout">
+    <aside class="sidebar">
+        <div class="sidebar-brand"><h2>DukaFlow</h2><span>Retail Management</span></div>
+        <nav class="sidebar-nav"></nav>
+    </aside>
+    <main class="main-content">
+        <header class="page-header">
+            <div>
+                <p class="section-label">Business Intelligence</p>
+                <h1>Business Insights</h1>
+                <p>Practical signals from your sales, inventory, and receivables.</p>
+            </div>
+            <button class="secondary-button" id="refresh-insights" type="button">Refresh</button>
+        </header>
+
+        <section class="stats-grid" id="insight-snapshot">
+            <article class="stat-card"><p class="stat-label">7-Day Sales</p><h2 class="stat-value" id="insight-sales">TSh 0</h2></article>
+            <article class="stat-card"><p class="stat-label">Sales vs Previous 7 Days</p><h2 class="stat-value" id="insight-change">0%</h2></article>
+            <article class="stat-card"><p class="stat-label">Low / Out of Stock</p><h2 class="stat-value" id="insight-stock">0 / 0</h2></article>
+            <article class="stat-card"><p class="stat-label">Outstanding Debt</p><h2 class="stat-value" id="insight-debt">TSh 0</h2></article>
+        </section>
+
+        <section class="card">
+            <div class="card-header"><div><p class="section-label">Signals</p><h2>What Needs Attention</h2></div></div>
+            <div id="insights-list" class="insights-list"><div class="empty-state">Loading insights...</div></div>
+        </section>
+    </main>
+</div>
+<script src="../js/auth.js"></script>
+<script src="../js/insights.js"></script>
+    <script src="/js/offline-sync.js"></script>
+<script src="/js/i18n.js"></script></body>
+</html>
