@@ -493,25 +493,144 @@ function isProductModalOpen() {
 
 
 async function setupProductImageUpload() {
-    if (!productImageInput) return;
+    if (!productImageInput) {
+        return;
+    }
+
     productImageInput.addEventListener("change", async () => {
         const file = productImageInput.files?.[0];
-        if (!file) return;
-        if (file.size > 5 * 1024 * 1024) { productImageInput.value = ""; if (productImageStatus) productImageStatus.textContent = "Picha lazima iwe chini ya 5MB."; return; }
-        if (!/^image\/(png|jpeg|webp|gif)$/i.test(file.type)) { productImageInput.value = ""; if (productImageStatus) productImageStatus.textContent = "Aina ya picha haikubaliki."; return; }
-        if (productImageStatus) productImageStatus.textContent = "Inapakia picha...";
-        try {
-            const presign = await fetch("/api/integrations/storage/presign", { method: "POST", headers: { "Content-Type": "application/json", Accept: "application/json" }, body: JSON.stringify({ filename: file.name, contentType: file.type, folder: "products" }) });
-            const payload = await presign.json().catch(() => ({}));
-            if (!presign.ok) throw new Error(payload.message || "Picha haikupakiwa.");
-            const upload = await fetch(payload.uploadUrl, { method: "PUT", headers: { "content-type": file.type }, body: file });
-            if (!upload.ok) throw new Error("Picha haikupakiwa kwenye storage.");
-            if (productImageKeyInput) productImageKeyInput.value = payload.key;
-            if (productImageUrlInput) productImageUrlInput.value = payload.publicUrl || `/api/integrations/storage/view?key=${encodeURIComponent(payload.key)}`;
-            if (productImageStatus) productImageStatus.textContent = "✓ Picha imepakiwa.";
-        } catch (error) {
-            if (productImageStatus) productImageStatus.textContent = error.message || "Picha haikupakiwa.";
+
+        if (!file) {
+            return;
+        }
+
+        /*
+         * Vercel/serverless request body safety:
+         * keep image uploads below 4MB.
+         */
+        if (file.size > 4 * 1024 * 1024) {
             productImageInput.value = "";
+
+            if (productImageStatus) {
+                productImageStatus.textContent =
+                    "Picha lazima iwe chini ya 4MB.";
+            }
+
+            return;
+        }
+
+        /*
+         * Only allow normal image formats.
+         */
+        if (
+            !/^image\/(png|jpeg|webp|gif)$/i.test(
+                file.type
+            )
+        ) {
+            productImageInput.value = "";
+
+            if (productImageStatus) {
+                productImageStatus.textContent =
+                    "Aina ya picha haikubaliki. Tumia PNG, JPEG, WEBP au GIF.";
+            }
+
+            return;
+        }
+
+        if (productImageStatus) {
+            productImageStatus.textContent =
+                "Inapakia picha...";
+        }
+
+        try {
+            /*
+             * IMPORTANT:
+             *
+             * We NO LONGER upload directly to the
+             * Cloudflare R2 presigned URL from the browser.
+             *
+             * The browser sends the image to DukaFlow.
+             * DukaFlow uploads it to R2 server-side.
+             */
+            const uploadUrl =
+                "/api/integrations/storage/upload" +
+                `?filename=${encodeURIComponent(file.name)}` +
+                "&folder=products";
+
+            const response = await fetch(
+                uploadUrl,
+                {
+                    method: "POST",
+                    credentials: "include",
+                    headers: {
+                        "Content-Type": file.type,
+                        "Accept": "application/json"
+                    },
+                    body: file
+                }
+            );
+
+            const payload =
+                await response
+                    .json()
+                    .catch(() => ({}));
+
+            if (!response.ok) {
+                throw new Error(
+                    payload.message ||
+                    "Picha haikupakiwa."
+                );
+            }
+
+            if (!payload.key) {
+                throw new Error(
+                    "Storage key haikurudi vizuri."
+                );
+            }
+
+            /*
+             * Keep both key and view URL so the existing
+             * product form can save the uploaded object.
+             */
+            if (productImageKeyInput) {
+                productImageKeyInput.value =
+                    payload.key;
+            }
+
+            if (productImageUrlInput) {
+                productImageUrlInput.value =
+                    payload.publicUrl ||
+                    payload.viewUrl ||
+                    `/api/integrations/storage/view?key=${encodeURIComponent(
+                        payload.key
+                    )}`;
+            }
+
+            if (productImageStatus) {
+                productImageStatus.textContent =
+                    "✓ Picha imepakiwa.";
+            }
+        } catch (error) {
+            console.error(
+                "Product image upload error:",
+                error?.message || error
+            );
+
+            if (productImageStatus) {
+                productImageStatus.textContent =
+                    error?.message ||
+                    "Picha haikupakiwa.";
+            }
+
+            productImageInput.value = "";
+
+            if (productImageKeyInput) {
+                productImageKeyInput.value = "";
+            }
+
+            if (productImageUrlInput) {
+                productImageUrlInput.value = "";
+            }
         }
     });
 }
