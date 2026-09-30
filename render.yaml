@@ -110,6 +110,6 @@ services:
 
 databases:
   - name: dukaflow-db
-    plan: starter
+    plan: free
     databaseName: dukaflow_db
     user: dukaflow
