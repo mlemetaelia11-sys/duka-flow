@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>DukaFlow - Purchases</title>
+
+    <link
+        rel="stylesheet"
+        href="../css/style.css"
+    >
+
+    <link rel="icon" href="/assets/dukaflow-icon.png" type="image/png">
+</head>
+
+<body>
+
+<div class="app-layout">
+
+
+    <aside class="sidebar">
+
+        <div class="sidebar-brand">
+            <h2>DukaFlow</h2>
+            <span>Retail Management</span>
+        </div>
+
+
+        <nav class="sidebar-nav">
+
+            <a href="../index.html">
+                Dashboard
+            </a>
+
+            <a href="../products/index.html">
+                Products
+            </a>
+
+            <a href="../sales/index.html">
+                Sales
+            </a>
+
+            <a href="../customers/index.html">
+                Customers
+            </a>
+
+            <a href="../debts/index.html">
+                Debts
+            </a>
+
+            <a href="../suppliers/index.html">
+                Suppliers
+            </a>
+
+            <a href="../purchases/index.html"
+               class="active">
+                Purchases
+            </a>
+
+        </nav>
+
+    </aside>
+
+
+    <main class="main-content">
+
+
+        <header class="page-header">
+
+            <div>
+
+                <h1>Purchases</h1>
+
+                <p>
+                    Receive stock and manage purchases
+                </p>
+
+            </div>
+
+
+            <button
+                type="button"
+                id="new-purchase-btn"
+                class="btn btn-primary"
+            >
+                + New Purchase
+            </button>
+
+        </header>
+
+
+        <!-- PURCHASE FORM -->
+
+        <section
+            id="purchase-form-section"
+            class="card"
+        >
+
+            <h2>New Purchase</h2>
+
+
+            <div class="form-group">
+
+                <label for="purchase-supplier">
+                    Supplier
+                </label>
+
+                <select
+                    id="purchase-supplier"
+                    class="form-control"
+                >
+
+                    <option value="">
+                        Select supplier
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="purchase-product">
+                    Product
+                </label>
+
+                <select
+                    id="purchase-product"
+                    class="form-control"
+                >
+
+                    <option value="">
+                        Select product
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="form-row">
+
+                <div class="form-group">
+
+                    <label for="purchase-quantity">
+                        Quantity
+                    </label>
+
+                    <input
+                        type="number"
+                        id="purchase-quantity"
+                        min="1"
+                        value="1"
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="purchase-unit-cost">
+                        Unit Cost
+                    </label>
+
+                    <input
+                        type="number"
+                        id="purchase-unit-cost"
+                        min="0"
+                        step="0.01"
+                    >
+
+                </div>
+
+            </div>
+
+
+            <button
+                type="button"
+                id="add-purchase-item-btn"
+                class="btn btn-secondary"
+            >
+                Add Item
+            </button>
+
+
+            <!-- CART -->
+
+            <div class="table-wrapper">
+
+                <table class="data-table">
+
+                    <thead>
+
+                        <tr>
+                            <th>Product</th>
+                            <th>Cost</th>
+                            <th>Qty</th>
+                            <th>Total</th>
+                            <th>Action</th>
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="purchase-cart-body">
+
+                        <tr>
+                            <td colspan="5">
+                                No items added.
+                            </td>
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+            <!-- TOTALS -->
+
+            <div class="purchase-summary">
+
+                <p>
+                    Subtotal:
+                    <strong id="purchase-subtotal">
+                        TSh 0
+                    </strong>
+                </p>
+
+
+                <div class="form-group">
+
+                    <label for="purchase-discount">
+                        Discount
+                    </label>
+
+                    <input
+                        type="number"
+                        id="purchase-discount"
+                        min="0"
+                        value="0"
+                    >
+
+                </div>
+
+
+                <p>
+                    Total:
+                    <strong id="purchase-total">
+                        TSh 0
+                    </strong>
+                </p>
+
+
+                <div class="form-group">
+
+                    <label for="purchase-payment-method">
+                        Payment Method
+                    </label>
+
+                    <select
+                        id="purchase-payment-method"
+                    >
+                        <option value="cash">
+                            Cash
+                        </option>
+
+                        <option value="mobile_money">
+                            Mobile Money
+                        </option>
+
+                        <option value="bank">
+                            Bank
+                        </option>
+
+                        <option value="credit">
+                            Credit
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="purchase-amount-paid">
+                        Amount Paid
+                    </label>
+
+                    <input
+                        type="number"
+                        id="purchase-amount-paid"
+                        min="0"
+                        value="0"
+                    >
+
+                </div>
+
+
+                <button
+                    type="button"
+                    id="complete-purchase-btn"
+                    class="btn btn-primary"
+                >
+                    Receive Stock
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <!-- HISTORY -->
+
+        <section class="card">
+
+            <h2>Purchase History</h2>
+
+            <div class="table-wrapper">
+
+                <table class="data-table">
+
+                    <thead>
+
+                        <tr>
+                            <th>Reference</th>
+                            <th>Supplier</th>
+                            <th>Items</th>
+                            <th>Total</th>
+                            <th>Paid</th>
+                            <th>Balance</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody id="purchase-history-body">
+
+                        <tr>
+                            <td colspan="8">
+                                Loading...
+                            </td>
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<script src="../js/auth.js"></script>
+<script src="../js/purchases.js"></script>
+
+    <script src="/js/offline-sync.js"></script>
+<script src="/js/i18n.js"></script></body>
+</html>

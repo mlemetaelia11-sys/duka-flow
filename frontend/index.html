@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="DukaFlow business dashboard">
+    <meta name="theme-color" content="#071B35">
+    <title>DukaFlow — Dashibodi</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" href="/assets/dukaflow-icon.png" type="image/png">
+</head>
+<body>
+<main class="container dashboard">
+    <section class="dashboard-heading df-dashboard-hero">
+        <div>
+            <p class="section-label">DASHIBODI</p>
+            <h1 id="dashboard-greeting">Habari, karibu 👋</h1>
+            <p class="section-description" id="dashboard-business-context">
+                Muhtasari wa biashara yako kulingana na data halisi.
+            </p>
+            <p id="current-date" class="current-date"></p>
+        </div>
+        <div class="df-hero-actions">
+            <a class="secondary-button" href="/reports/">Angalia ripoti</a>
+            <a class="primary-button df-primary-action" href="/sales/">+ Mauzo Mapya</a>
+        </div>
+    </section>
+
+    <section class="stats-grid df-kpi-grid" aria-label="Muhtasari wa biashara">
+        <article class="stat-card df-kpi-card" data-dashboard-widget="summary_sales">
+            <div class="df-kpi-top"><span class="df-kpi-icon sales">↗</span><span class="df-kpi-label">Mapato ya Leo</span></div>
+            <h2 id="dashboard-today-sales" class="stat-value">—</h2>
+            <p class="stat-note"><span id="dashboard-sales-trend" class="df-trend">—</span> dhidi ya jana</p>
+        </article>
+
+        <article class="stat-card df-kpi-card" data-dashboard-widget="summary_profit">
+            <div class="df-kpi-top"><span class="df-kpi-icon profit">◆</span><span class="df-kpi-label">Faida ya Leo</span></div>
+            <h2 id="dashboard-today-profit" class="stat-value">—</h2>
+            <p class="stat-note"><span id="dashboard-profit-trend" class="df-trend">—</span> dhidi ya jana</p>
+        </article>
+
+        <article class="stat-card df-kpi-card" data-dashboard-widget="summary_sales_count">
+            <div class="df-kpi-top"><span class="df-kpi-icon count">#</span><span class="df-kpi-label">Mauzo Leo</span></div>
+            <h2 id="dashboard-sales-count" class="stat-value">—</h2>
+            <p class="stat-note"><span id="dashboard-sales-count-trend" class="df-trend">—</span> dhidi ya jana</p>
+        </article>
+
+        <article class="stat-card df-kpi-card" data-dashboard-widget="summary_debt">
+            <div class="df-kpi-top"><span class="df-kpi-icon debt">!</span><span class="df-kpi-label">Madeni Yanayodaiwa</span></div>
+            <h2 id="dashboard-outstanding-debt" class="stat-value">—</h2>
+            <p class="stat-note"><span id="dashboard-debt-count">—</span> wateja wenye salio</p>
+        </article>
+
+        <article class="stat-card df-kpi-card" data-dashboard-widget="summary_products">
+            <div class="df-kpi-top"><span class="df-kpi-icon products">□</span><span class="df-kpi-label">Bidhaa</span></div>
+            <h2 id="dashboard-total-products" class="stat-value">—</h2>
+            <p class="stat-note"><span id="dashboard-low-stock-count">—</span> ziko low stock</p>
+        </article>
+
+        <article class="stat-card df-kpi-card" data-dashboard-widget="summary_inventory">
+            <div class="df-kpi-top"><span class="df-kpi-icon inventory">▦</span><span class="df-kpi-label">Thamani ya Stock</span></div>
+            <h2 id="dashboard-inventory-value" class="stat-value">—</h2>
+            <p class="stat-note"><span id="dashboard-total-customers">—</span> wateja kwenye mfumo</p>
+        </article>
+    </section>
+
+    <section class="df-main-dashboard-grid">
+        <article class="dashboard-card df-chart-card" data-dashboard-widget="sales_chart">
+            <div class="card-header sales-chart-header">
+                <div>
+                    <p class="section-label">MAUZO</p>
+                    <h2>Muhtasari wa Mauzo</h2>
+                    <p class="df-card-subtitle" id="sales-chart-summary">Inapakia data ya mauzo...</p>
+                </div>
+                <div class="df-period-control" role="group" aria-label="Muda wa mauzo">
+                    <button type="button" data-sales-period="7" class="is-active">7 Siku</button>
+                    <button type="button" data-sales-period="30">30 Siku</button>
+                    <button type="button" data-sales-period="90">90 Siku</button>
+                </div>
+            </div>
+            <div id="sales-chart-state" class="df-chart-state" aria-live="polite"></div>
+            <div class="sales-chart-container df-real-chart">
+                <svg id="sales-overview-chart" role="img" aria-label="Chati ya mauzo"></svg>
+                <div id="sales-chart-tooltip" class="df-chart-tooltip" hidden></div>
+            </div>
+        </article>
+
+        <article class="dashboard-card df-payment-card">
+            <div class="card-header">
+                <div>
+                    <p class="section-label">MALIPO</p>
+                    <h2>Njia za Malipo</h2>
+                    <p class="df-card-subtitle">Mauzo ya leo</p>
+                </div>
+            </div>
+            <div id="payment-methods-content" class="df-payment-content">
+                <div class="df-loading-lines"><span></span><span></span><span></span></div>
+            </div>
+        </article>
+    </section>
+
+    <section class="df-secondary-grid">
+        <article class="dashboard-card" data-dashboard-widget="recent_transactions">
+            <div class="card-header df-card-header-row">
+                <div>
+                    <p class="section-label">SHUGHULI</p>
+                    <h2>Mauzo ya Hivi Karibuni</h2>
+                </div>
+                <a class="df-card-link" href="/sales/">Tazama yote →</a>
+            </div>
+            <div class="table-wrapper">
+                <table class="products-table df-modern-table">
+                    <thead>
+                        <tr><th>Risiti</th><th>Muda</th><th>Njia</th><th>Kiasi</th></tr>
+                    </thead>
+                    <tbody id="dashboard-recent-transactions-body">
+                        <tr><td colspan="4"><div class="df-table-loading">Inapakia...</div></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </article>
+
+        <article class="dashboard-card" data-dashboard-widget="low_stock">
+            <div class="card-header df-card-header-row">
+                <div>
+                    <p class="section-label">STOCK</p>
+                    <h2>Bidhaa Zinazohitaji Uangalizi</h2>
+                </div>
+                <a class="df-card-link" href="/inventory/">Tazama stock →</a>
+            </div>
+            <div class="table-wrapper">
+                <table class="products-table df-modern-table">
+                    <thead><tr><th>Bidhaa</th><th>Stock</th><th>Hali</th></tr></thead>
+                    <tbody id="dashboard-low-stock-body">
+                        <tr><td colspan="3"><div class="df-table-loading">Inapakia...</div></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </article>
+    </section>
+
+    <section class="df-bottom-grid">
+        <article class="dashboard-card">
+            <div class="card-header df-card-header-row">
+                <div>
+                    <p class="section-label">UTENDAJI</p>
+                    <h2>Bidhaa Zinazouza Zaidi</h2>
+                    <p class="df-card-subtitle">Siku 7 zilizopita</p>
+                </div>
+                <a class="df-card-link" href="/reports/">Ripoti →</a>
+            </div>
+            <div id="top-products-content" class="df-top-products"></div>
+        </article>
+
+        <article class="dashboard-card df-quick-actions-card">
+            <div class="card-header">
+                <p class="section-label">HARAKA</p>
+                <h2>Vitendo vya Haraka</h2>
+            </div>
+            <div class="df-quick-actions">
+                <a href="/sales/" class="df-quick-action"><span>＋</span><strong>Mauzo Mapya</strong><small>Fungua POS</small></a>
+                <a href="/products/" class="df-quick-action"><span>□</span><strong>Ongeza Bidhaa</strong><small>Bidhaa mpya</small></a>
+                <a href="/customers/" class="df-quick-action"><span>◉</span><strong>Ongeza Mteja</strong><small>Weka taarifa</small></a>
+                <a href="/expenses/" class="df-quick-action"><span>−</span><strong>Matumizi</strong><small>Rekodi gharama</small></a>
+            </div>
+        </article>
+
+        <article class="dashboard-card df-copilot-card">
+            <div class="df-copilot-header">
+                <div class="df-copilot-avatar">✦</div>
+                <div><p class="section-label">DUKAFLOW AI</p><h2>DukaFlow Copilot</h2></div>
+                <span class="df-online-dot">● Tayari</span>
+            </div>
+            <p class="df-copilot-copy">Pata majibu kuhusu mauzo, stock, madeni na biashara yako kutoka kwenye data yako halisi.</p>
+            <div id="dashboard-smart-insight" class="df-insight-box">Inachambua data yako...</div>
+            <div class="df-copilot-prompts">
+                <a href="/assistant/">Hali ya mauzo leo?</a>
+                <a href="/assistant/">Bidhaa gani zinaisha?</a>
+                <a href="/assistant/">Nifanye nini leo?</a>
+            </div>
+            <a href="/assistant/" class="primary-button df-copilot-button">Fungua Copilot →</a>
+        </article>
+    </section>
+
+    <div id="dashboard-error" class="df-dashboard-error" hidden></div>
+</main>
+
+<script src="./js/auth.js"></script>
+<script src="./js/offline-sync.js"></script>
+<script src="./js/app.js"></script>
+<script src="./js/dashboard.js"></script>
+<script src="/js/i18n.js"></script>
+</body>
+</html>

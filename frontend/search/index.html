@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0f172a"><title>Global Search | DukaFlow</title>
+    <link rel="manifest" href="../manifest.json"><link rel="stylesheet" href="../css/style.css">
+    <link rel="icon" href="/assets/dukaflow-icon.png" type="image/png">
+</head>
+<body>
+<div class="app-layout">
+    <aside class="sidebar"><div class="sidebar-brand"><h2>DukaFlow</h2><span>Retail Management</span></div><nav class="sidebar-nav"></nav></aside>
+    <main class="main-content">
+        <header class="page-header"><div><p class="section-label">Global</p><h1>Search</h1><p>Find products, customers, suppliers, sales and purchases from one place.</p></div></header>
+        <section class="card search-card">
+            <form id="global-search-form"><label class="form-field"><span>Search</span><input id="global-search-input" autocomplete="off" placeholder="Name, phone, barcode, SKU, receipt or purchase reference" minlength="2" autofocus></label><button class="primary-button" type="submit">Search</button></form>
+        </section>
+        <section class="dashboard-grid" id="search-results"></section>
+    </main>
+</div>
+<script src="../js/auth.js"></script><script src="../js/search.js"></script>
+    <script src="/js/offline-sync.js"></script>
+<script src="/js/i18n.js"></script></body>
+</html>

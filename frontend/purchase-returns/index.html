@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0f172a">
+    <title>Purchase Returns | DukaFlow</title>
+    <link rel="manifest" href="../manifest.json">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="icon" href="/assets/dukaflow-icon.png" type="image/png">
+</head>
+<body>
+<div class="app-layout">
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <h2>DukaFlow</h2>
+            <span>Retail Management</span>
+        </div>
+        <nav class="sidebar-nav"></nav>
+    </aside>
+
+    <main class="main-content">
+        <header class="page-header">
+            <div>
+                <p class="section-label">Suppliers</p>
+                <h1>Purchase Returns</h1>
+                <p>Return stock to suppliers and keep purchase balances accurate.</p>
+            </div>
+        </header>
+
+        <section class="dashboard-grid">
+            <article class="card">
+                <div class="card-header">
+                    <div>
+                        <p class="section-label">New Return</p>
+                        <h2>Return Purchased Stock</h2>
+                    </div>
+                </div>
+
+                <form id="purchase-return-form">
+                    <label class="form-field">
+                        <span>Purchase</span>
+                        <select id="purchase-return-purchase" required>
+                            <option value="">Select purchase</option>
+                        </select>
+                    </label>
+
+                    <div id="purchase-return-summary" class="empty-state">
+                        Select a purchase to see its items.
+                    </div>
+
+                    <div class="table-wrapper">
+                        <table class="data-table">
+                            <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Purchased</th>
+                                <th>Already Returned</th>
+                                <th>Unit Cost</th>
+                                <th>Return Qty</th>
+                            </tr>
+                            </thead>
+                            <tbody id="purchase-return-items-body">
+                            <tr><td colspan="5">No purchase selected.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="compact-grid">
+                        <label class="form-field">
+                            <span>Reason</span>
+                            <input id="purchase-return-reason" maxlength="255" placeholder="Damaged, wrong delivery, expired...">
+                        </label>
+                        <div class="card-soft">
+                            <span class="muted">Return Total</span>
+                            <strong id="purchase-return-total">TSh 0</strong>
+                        </div>
+                    </div>
+
+                    <button class="primary-button" id="purchase-return-submit" type="submit">Complete Return</button>
+                    <p id="purchase-return-message" class="form-message" role="alert"></p>
+                </form>
+            </article>
+
+            <article class="card">
+                <div class="card-header">
+                    <div>
+                        <p class="section-label">History</p>
+                        <h2>Recent Purchase Returns</h2>
+                    </div>
+                    <button class="secondary-button" id="purchase-return-refresh" type="button">Refresh</button>
+                </div>
+
+                <div class="table-wrapper">
+                    <table class="data-table">
+                        <thead>
+                        <tr>
+                            <th>Return</th>
+                            <th>Purchase</th>
+                            <th>Supplier</th>
+                            <th>Amount</th>
+                            <th>Date</th>
+                        </tr>
+                        </thead>
+                        <tbody id="purchase-return-history-body">
+                        <tr><td colspan="5">Loading...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </article>
+        </section>
+    </main>
+</div>
+
+<script src="../js/auth.js"></script>
+<script src="../js/purchase-returns.js"></script>
+    <script src="/js/offline-sync.js"></script>
+<script src="/js/i18n.js"></script></body>
+</html>

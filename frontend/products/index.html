@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products | DukaFlow</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="icon" href="/assets/dukaflow-icon.png" type="image/png">
+</head>
+<body>
+
+    <header class="site-header">
+        <div class="container header-content">
+
+            <a class="brand" href="/">DukaFlow</a>
+
+            <nav class="main-nav" aria-label="Main navigation">
+                <a href="/">Dashboard</a>
+                <a href="/products/">Products</a>
+                <a href="/sales/">Sales</a>
+                <a href="/customers/">Customers</a>
+                <a href="/debts/">Debts</a>
+            </nav>
+
+        </div>
+    </header>
+
+    <main class="container page-content">
+
+        <section class="page-heading">
+            <div>
+                <p class="section-label">Inventory</p>
+                <h1>Products</h1>
+                <p class="section-description">
+                    Manage the products and stock in your business.
+                </p>
+            </div>
+
+            <button
+                type="button"
+                id="add-product-btn"
+                class="btn btn-primary primary-button"
+            >
+                Add Product
+            </button>
+        </section>
+
+        <section class="products-card">
+
+            <div class="products-toolbar">
+                <label class="search-field">
+                    <span>Search products</span>
+                   <input
+    id="product-search"
+    type="search"
+    placeholder="Search by product name..."
+    aria-label="Search products"
+>
+                </label>
+            </div>
+
+            <div class="table-wrapper">
+                <table class="products-table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Product</th>
+                            <th scope="col">SKU</th>
+                            <th scope="col">Barcode</th>
+                            <th scope="col">Buying Price</th>
+                            <th scope="col">Selling Price</th>
+                            <th scope="col">Profit</th>
+                            <th scope="col">Stock</th>
+                            <th scope="col">Threshold</th>
+                            <th scope="col">Created</th>
+                            <th scope="col">Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="products-table-body">
+    <tr>
+        <td colspan="10">
+            <div class="table-empty-state">
+                <strong>No products yet</strong>
+                <span>
+                    Products will appear here after they are added.
+                </span>
+            </div>
+        </td>
+    </tr>
+</tbody>
+                </table>
+            </div>
+
+        </section>
+
+    </main>
+
+        <div
+        id="product-modal"
+        class="modal"
+        aria-hidden="true"
+    >
+        <div
+            class="modal-overlay"
+            data-close-modal
+        ></div>
+
+        <section
+            class="modal-content"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="product-modal-title"
+        >
+            <div class="modal-header">
+                <div>
+                    <p class="section-label">Inventory</p>
+                    <h2 id="product-modal-title">Add Product</h2>
+                </div>
+
+                <button
+                    class="modal-close"
+                    type="button"
+                    data-close-modal
+                    aria-label="Close dialog"
+                >
+                    ×
+                </button>
+            </div>
+
+            <form id="product-form">
+
+                <label class="form-field">
+    <span>Low Stock Threshold</span>
+
+    <input
+        type="number"
+        id="low-stock-threshold"
+        name="low-stock-threshold"
+        min="0"
+        step="1"
+        value="5"
+        required
+    >
+</label>
+
+                <div class="form-grid">
+
+                    <label class="form-field">
+                        <span>Product Name</span>
+                        <input
+                            type="text"
+                            id="product-name"
+                            name="product-name"
+                            required
+                        >
+                    </label>
+
+                    <label class="form-field">
+                        <span>SKU</span>
+                        <input type="text" id="product-sku" name="sku" maxlength="80" placeholder="Optional SKU">
+                    </label>
+
+                    <label class="form-field">
+                        <span>Barcode</span>
+                        <input type="text" id="product-barcode" name="barcode" maxlength="80" placeholder="Scan or enter barcode">
+                    </label>
+
+                    <label class="form-field">
+                        <span>Category</span>
+                        <input type="text" id="product-category" name="category" maxlength="100" placeholder="e.g. Groceries">
+                    </label>
+
+                    <label class="form-field">
+                        <span>Unit</span>
+                        <input type="text" id="product-unit" name="unit" maxlength="30" value="pcs" placeholder="pcs, kg, litre...">
+                    </label>
+
+                    <label class="form-field">
+                        <span>Buying Price</span>
+                        <input
+                            type="number"
+                            id="buying-price"
+                            name="buying-price"
+                            min="0"
+                            step="0.01"
+                            required
+                        >
+                    </label>
+
+                    <label class="form-field">
+                        <span>Selling Price</span>
+                        <input
+                            type="number"
+                            id="selling-price"
+                            name="selling-price"
+                            min="0"
+                            step="0.01"
+                            required
+                        >
+                    </label>
+
+                    <label class="form-field">
+                        <span>Stock Quantity</span>
+                        <input
+                            type="number"
+                            id="stock-quantity"
+                            name="stock-quantity"
+                            min="0"
+                            step="1"
+                            required
+                        >
+                    </label>
+
+                    <label class="form-field df-image-field">
+                        <span>Product Image</span>
+                        <input id="product-image" type="file" accept="image/png,image/jpeg,image/webp,image/gif">
+                        <small>PNG, JPG, WEBP or GIF · max 5MB</small>
+                        <input id="product-image-key" type="hidden">
+                        <input id="product-image-url" type="hidden">
+                        <span id="product-image-status" class="df-upload-status" aria-live="polite"></span>
+                    </label>
+
+                </div>
+
+                <div
+    id="product-form-message"
+    class="form-message"
+    role="alert"
+    aria-live="polite"
+></div>
+
+                <div class="modal-actions">
+                    <button
+                        class="secondary-button"
+                        type="button"
+                        data-close-modal
+                    >
+                        Cancel
+                    </button>
+
+                    <button
+    id="product-submit-button"
+    class="primary-button"
+    type="submit"
+>
+    Add Product
+</button>
+                </div>
+
+            </form>
+        </section>
+    </div>
+
+    <script src="../js/auth.js"></script>
+    <script src="../js/app.js"></script>
+
+    <script src="/js/offline-sync.js"></script>
+<script src="/js/i18n.js"></script></body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="theme-color" content="#071B35"><title>WhatsApp AI Agent | DukaFlow</title>
+<link rel="stylesheet" href="../css/style.css"><link rel="icon" href="/assets/dukaflow-icon.png">
+</head>
+<body>
+<div class="app-layout">
+<aside class="sidebar"><div class="sidebar-brand"><a href="/" class="sidebar-brand-link"><img src="/assets/dukaflow-mark.png" class="sidebar-logo-mark" alt=""><span class="sidebar-wordmark"><strong>Duka</strong><b>Flow</b></span></a><span class="sidebar-tagline">Smart business. Better growth.</span></div><nav class="sidebar-nav"></nav></aside>
+<main class="main-content">
+<section class="wa-hero">
+<div><span class="section-label">DUKAFLOW AI SALES</span><h1>WhatsApp Agent</h1><p>AI yako inajibu wateja, inatafuta bidhaa, inachukua order na ku-update stock moja kwa moja.</p></div>
+<div class="wa-hero-actions"><span id="wa-status-pill" class="wa-pill offline">Haijaunganishwa</span><button id="wa-agent-toggle" class="primary-button" type="button">AI Agent: OFF</button></div>
+</section>
+<section class="card wa-connection-card" aria-labelledby="wa-connection-title">
+<div class="wa-connection-copy"><span class="section-label">WHATSAPP BUSINESS</span><h2 id="wa-connection-title">Connect your WhatsApp Business</h2><p>Connect your WhatsApp Business number and let DukaFlow's AI Sales Agent handle customer conversations, product questions and orders.</p></div>
+<div id="wa-connect-panel" class="wa-connect-panel"><button id="wa-connect" class="primary-button" type="button">Connect WhatsApp</button><p id="wa-meta-note" class="wa-meta-note" hidden></p></div>
+<div id="wa-connected-panel" class="wa-connected-panel" hidden><div class="wa-connected-status"><span class="wa-connected-dot"></span><strong>Connected</strong></div><dl class="wa-account-details"><div><dt>Business</dt><dd id="wa-business-name">—</dd></div><div><dt>Phone</dt><dd id="wa-connected-phone">—</dd></div></dl><div class="wa-connection-actions"><button id="wa-test-connection" class="secondary-button" type="button">Test Connection</button><button id="wa-settings-open" class="secondary-button" type="button">WhatsApp Settings</button><button id="wa-disconnect-open" class="danger-button" type="button">Disconnect</button></div></div>
+<div id="wa-connection-state" class="wa-connection-state" role="status" aria-live="polite" hidden></div>
+<div id="wa-connection-error" class="wa-connection-error" role="alert" hidden><span>Could not connect WhatsApp.</span><button id="wa-connect-retry" class="secondary-button" type="button">Try Again</button></div>
+<details id="wa-settings-details" class="wa-settings-details" hidden><summary>WhatsApp Settings</summary><form id="wa-settings-form" class="wa-form"><label class="wa-check"><input id="wa-auto" type="checkbox" checked> Automatically create confirmed orders</label><label>Welcome message<textarea id="wa-welcome" rows="3" maxlength="1000" placeholder="Karibu! Nikusaidie kupata bidhaa gani?"></textarea></label><button class="primary-button" type="submit">Save settings</button></form></details>
+<p id="wa-config-note" class="wa-config-note" aria-live="polite"></p>
+</section>
+<section class="wa-analytics-grid">
+<div class="wa-stat"><span>Messages today</span><strong id="wa-stat-messages">—</strong></div>
+<div class="wa-stat"><span>AI replies</span><strong id="wa-stat-ai">—</strong></div>
+<div class="wa-stat"><span>Orders today</span><strong id="wa-stat-orders">—</strong></div>
+<div class="wa-stat"><span>Revenue today</span><strong id="wa-stat-revenue">—</strong></div>
+</section>
+<div class="wa-grid">
+<section class="card wa-inbox-card">
+<div class="wa-section-head"><div><span class="section-label">LIVE INBOX</span><h2>Conversations</h2></div><button id="wa-refresh" class="secondary-button">Refresh</button></div>
+<div class="wa-inbox"><aside id="wa-conversation-list" class="wa-conversation-list"><div class="wa-empty">Inapakia conversations...</div></aside><section class="wa-chat"><div id="wa-chat-head" class="wa-chat-head"><div class="wa-avatar">WA</div><div><strong>Chagua conversation</strong><small>Utaona ujumbe hapa</small></div></div><div id="wa-messages" class="wa-messages"><div class="wa-chat-empty">💬<strong>WhatsApp inbox</strong><span>Chagua mteja kushoto kuona mazungumzo.</span></div></div><form id="wa-reply-form" class="wa-reply" hidden><input id="wa-reply-input" placeholder="Andika reply ya human..." maxlength="4096"><button class="primary-button">Tuma</button><button id="wa-takeover" type="button" class="secondary-button">Human takeover</button></form></section></div>
+</section>
+<aside class="wa-side">
+<section class="card wa-capabilities">
+<span class="section-label">AGENT CAPABILITIES</span>
+<div><b>✓ Product search</b><span>Bei + stock halisi</span></div>
+<div><b>✓ Order creation</b><span>Sale + stock update</span></div>
+<div><b>✓ Customer lookup</b><span>Phone/name matching</span></div>
+<div><b>✓ Human takeover</b><span>Owner anaingia wakati wowote</span></div>
+</section>
+</aside>
+</div>
+<dialog id="wa-disconnect-dialog" class="wa-disconnect-dialog"><form method="dialog"><h2>Disconnect WhatsApp?</h2><p>Your DukaFlow AI Agent will stop automatically replying to customers on this WhatsApp number.</p><div><button id="wa-disconnect-cancel" class="secondary-button" value="cancel">Cancel</button><button id="wa-disconnect-confirm" class="danger-button" value="disconnect">Disconnect</button></div></form></dialog>
+</main></div>
+<script src="../js/auth.js"></script><script src="../js/whatsapp.js"></script><script src="/js/offline-sync.js"></script><script src="/js/i18n.js"></script>
+</body></html>

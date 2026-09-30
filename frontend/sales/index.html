@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0f172a">
+    <title>Sales | DukaFlow</title>
+    <link rel="manifest" href="../manifest.json">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="icon" href="/assets/dukaflow-icon.png" type="image/png">
+</head>
+<body>
+<div class="app-layout">
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <h2>DukaFlow</h2>
+            <span>Retail Management</span>
+        </div>
+        <nav class="sidebar-nav"></nav>
+    </aside>
+
+    <main class="main-content">
+        <header class="page-header">
+            <div>
+                <p class="section-label">Point of Sale</p>
+                <h1>New Sale</h1>
+                <p>Fast checkout with product search, barcode/SKU entry and customer credit.</p>
+            </div>
+        </header>
+
+        <section class="dashboard-grid">
+            <article class="card">
+                <div class="card-header">
+                    <div>
+                        <p class="section-label">Checkout</p>
+                        <h2>Add Products</h2>
+                    </div>
+                </div>
+
+                <div class="form-grid">
+                    <label class="form-field">
+                        <span>Barcode / SKU</span>
+                        <input id="sale-barcode" type="search" inputmode="text" autocomplete="off" placeholder="Scan barcode or type SKU" autofocus>
+                        <small>USB/Bluetooth scanners can type directly into this field.</small>
+                    </label>
+
+                    <label class="form-field">
+                        <span>Product</span>
+                        <select id="sale-product">
+                            <option value="">Select product</option>
+                        </select>
+                    </label>
+
+                    <label class="form-field">
+                        <span>Quantity</span>
+                        <input id="sale-quantity" type="number" min="1" step="1" value="1">
+                    </label>
+
+                    <div class="form-field">
+                        <span>Selected Product</span>
+                        <strong id="sale-price">TSh 0</strong>
+                        <small id="sale-stock">Available: 0</small>
+                    </div>
+                </div>
+
+                <button type="button" id="add-to-cart-btn" class="primary-button">Add to Cart</button>
+                <p id="sales-message" class="form-message" aria-live="polite"></p>
+
+                <div class="table-wrapper">
+                    <table class="data-table">
+                        <thead>
+                        <tr><th>Product</th><th>Price</th><th>Qty</th><th>Total</th><th>Action</th></tr>
+                        </thead>
+                        <tbody id="sale-cart-body">
+                        <tr><td colspan="5">No items in cart.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </article>
+
+            <aside class="card">
+                <div class="card-header">
+                    <div><p class="section-label">Payment</p><h2>Complete Sale</h2></div>
+                </div>
+
+                <label class="form-field">
+                    <span>Payment Method</span>
+                    <select id="sale-payment-method">
+                        <option value="cash">Cash</option>
+                        <option value="mobile_money">Mobile Money</option>
+                        <option value="bank">Bank</option>
+                        <option value="credit">Credit</option>
+                    </select>
+                </label>
+
+                <label class="form-field">
+                    <span>Payment Reference</span>
+                    <input id="sale-payment-reference" maxlength="100" placeholder="M-Pesa / bank reference (optional)">
+                </label>
+
+                <label class="form-field" id="sale-mobile-provider-group" style="display:none;">
+                    <span>Mobile Money Provider</span>
+                    <select id="sale-mobile-provider">
+                        <option value="">Select provider</option>
+                        <option value="M-Pesa">M-Pesa</option>
+                        <option value="Airtel Money">Airtel Money</option>
+                        <option value="Tigo Pesa">Tigo Pesa</option>
+                        <option value="HaloPesa">HaloPesa</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </label>
+
+                <div id="sale-customer-group" class="form-field" style="display:none;">
+                    <span>Customer</span>
+                    <select id="sale-customer"><option value="">Select customer</option></select>
+                </div>
+
+                <div id="sale-due-date-group" class="form-field" style="display:none;">
+                    <span>Due Date</span>
+                    <input id="sale-due-date" type="date">
+                </div>
+
+                <label class="form-field">
+                    <span>Discount</span>
+                    <input id="sale-discount" type="number" min="0" step="0.01" value="0">
+                </label>
+
+                <div class="sale-total"><span>Subtotal</span><strong id="sale-subtotal">TSh 0</strong></div>
+                <div class="sale-total"><span>Discount</span><strong id="sale-discount-total">TSh 0</strong></div>
+                <div class="sale-total"><span>Total</span><strong id="sale-total">TSh 0</strong></div>
+
+                <label class="form-field">
+                    <span>Amount Paid</span>
+                    <input id="sale-amount-paid" type="number" min="0" step="0.01" value="0">
+                </label>
+                <div class="sale-total"><span>Change</span><strong id="sale-change">TSh 0</strong></div>
+
+                <div class="compact-grid"><button type="button" id="open-customer-display" class="secondary-button">Open Customer Display</button><button type="button" id="complete-sale-btn" class="primary-button">Complete Sale</button></div>
+            </aside>
+        </section>
+
+        <section class="card sales-history-section">
+            <div class="card-header">
+                <div><p class="section-label">HISTORIA</p><h2>Sales History</h2><p>Transactions halisi kutoka kwenye biashara yako.</p></div>
+            </div>
+            <div class="df-sales-history-toolbar">
+                <label><span>Tafuta</span><input id="sales-history-search" type="search" placeholder="Risiti, mteja au simu..."></label>
+                <label><span>Njia</span><select id="sales-history-payment"><option value="">Zote</option><option value="cash">Taslimu</option><option value="mobile_money">Mobile Money</option><option value="bank">Benki</option><option value="credit">Deni</option></select></label>
+                <label><span>Hali</span><select id="sales-history-status"><option value="">Zote</option><option value="paid">Imelipwa</option><option value="partial">Sehemu</option><option value="credit">Deni</option><option value="cancelled">Imeghairiwa</option></select></label>
+            </div>
+            <div class="table-wrapper">
+                <table class="data-table">
+                    <thead><tr><th>Risiti</th><th>Mteja</th><th>Tarehe</th><th>Staff</th><th>Jumla</th><th>Malipo</th><th>Hali</th><th>Action</th></tr></thead>
+                    <tbody id="sales-history-body"><tr><td colspan="8">Loading sales...</td></tr></tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+</div>
+
+<div id="sale-details-modal" class="modal" aria-hidden="true">
+    <div class="modal-overlay" data-close-sale-details></div>
+    <section class="modal-content" role="dialog" aria-modal="true" aria-labelledby="sale-details-receipt">
+        <div class="modal-header">
+            <div><p class="section-label">Receipt</p><h2>Sale Details</h2><p id="sale-details-receipt"></p></div>
+            <button type="button" id="close-sale-details" class="modal-close" aria-label="Close">×</button>
+        </div>
+        <div id="sale-details-content">Loading...</div>
+        <div class="modal-footer">
+            <button type="button" id="print-sale-receipt" class="primary-button">Print Receipt</button>
+            <button type="button" id="close-sale-details-bottom" class="secondary-button">Close</button>
+        </div>
+    </section>
+</div>
+
+<script src="../js/auth.js"></script>
+<script src="../js/sales.js"></script>
+    <script src="/js/offline-sync.js"></script>
+<script src="/js/i18n.js"></script></body>
+</html>

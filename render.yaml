@@ -1,0 +1,115 @@
+services:
+  - type: web
+    name: dukaflow
+    runtime: docker
+    plan: starter
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3000
+      - key: HOST
+        value: 0.0.0.0
+      - key: DATABASE_HOST
+        fromDatabase:
+          name: dukaflow-db
+          property: host
+      - key: DATABASE_PORT
+        fromDatabase:
+          name: dukaflow-db
+          property: port
+      - key: DATABASE_NAME
+        fromDatabase:
+          name: dukaflow-db
+          property: database
+      - key: DATABASE_USER
+        fromDatabase:
+          name: dukaflow-db
+          property: user
+      - key: DATABASE_PASSWORD
+        fromDatabase:
+          name: dukaflow-db
+          property: password
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRES_IN
+        value: 8h
+      - key: DEFAULT_CURRENCY
+        value: TZS
+      - key: DEFAULT_TIMEZONE
+        value: Africa/Dar_es_Salaam
+      - key: APP_URL
+        sync: false
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: GOOGLE_CLIENT_SECRET
+        sync: false
+      - key: GOOGLE_CALLBACK_URL
+        sync: false
+      - key: PESAPAL_CONSUMER_KEY
+        sync: false
+      - key: PESAPAL_CONSUMER_SECRET
+        sync: false
+      - key: PESAPAL_ENVIRONMENT
+        value: production
+      - key: PESAPAL_IPN_URL
+        sync: false
+      - key: PESAPAL_NOTIFICATION_ID
+        sync: false
+      - key: RESEND_API_KEY
+        sync: false
+      - key: RESEND_FROM_EMAIL
+        sync: false
+      - key: R2_ACCOUNT_ID
+        sync: false
+      - key: R2_ENDPOINT
+        sync: false
+      - key: R2_ACCESS_KEY_ID
+        sync: false
+      - key: R2_SECRET_ACCESS_KEY
+        sync: false
+      - key: R2_BUCKET
+        value: dukaflow-assets
+      - key: R2_PUBLIC_BASE_URL
+        sync: false
+      - key: GROQ_API_KEY
+        sync: false
+      - key: GROQ_MODEL
+        value: openai/gpt-oss-120b
+      - key: FIREBASE_PROJECT_ID
+        sync: false
+      - key: FIREBASE_CLIENT_EMAIL
+        sync: false
+      - key: FIREBASE_PRIVATE_KEY
+        sync: false
+      - key: SENTRY_DSN
+        sync: false
+      - key: NOTIFICATIONS_MODE
+        value: live
+      - key: REQUIRE_EMAIL_VERIFICATION
+        value: "1"
+      - key: ENABLE_AI
+        value: "1"
+      - key: AI_MODE
+        value: live
+      - key: ENABLE_STORAGE
+        value: "1"
+      - key: STORAGE_MODE
+        value: live
+      - key: ENABLE_EMAIL
+        value: "1"
+      - key: EMAIL_MODE
+        value: live
+      - key: ENABLE_PAYMENTS
+        value: "1"
+      - key: PAYMENTS_MODE
+        value: production
+      - key: ENABLE_NOTIFICATIONS
+        value: "1"
+
+databases:
+  - name: dukaflow-db
+    plan: starter
+    databaseName: dukaflow_db
+    user: dukaflow

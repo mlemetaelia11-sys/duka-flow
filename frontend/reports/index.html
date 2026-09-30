@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0f172a">
+    <title>Reports | DukaFlow</title>
+    <link rel="manifest" href="../manifest.json">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="icon" href="/assets/dukaflow-icon.png" type="image/png">
+</head>
+<body>
+<div class="app-layout">
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <h2>DukaFlow</h2>
+            <span>Retail Management</span>
+        </div>
+        <nav class="sidebar-nav"></nav>
+    </aside>
+
+    <main class="main-content">
+        <header class="page-header">
+            <div>
+                <p class="section-label">Analytics</p>
+                <h1>Reports</h1>
+                <p>Understand sales, profit, payments, products, and team performance.</p>
+            </div>
+            <div class="page-header-actions">
+                <div class="export-controls"><select id="export-resource" aria-label="Export resource"><option value="sales">Sales</option><option value="products">Products</option><option value="customers">Customers</option><option value="suppliers">Suppliers</option><option value="purchases">Purchases</option><option value="debts">Debts</option><option value="stock">Stock Movements</option></select><button id="export-report-btn" class="secondary-button" type="button">Export CSV</button></div>
+            </div>
+        </header>
+
+        <section class="card report-filter-card">
+            <div class="form-grid">
+                <label class="form-field">
+                    <span>From</span>
+                    <input id="report-start-date" type="date">
+                </label>
+                <label class="form-field">
+                    <span>To</span>
+                    <input id="report-end-date" type="date">
+                </label>
+                <div class="form-field form-actions-field">
+                    <span>&nbsp;</span>
+                    <button id="generate-report-btn" class="primary-button" type="button">Generate</button>
+                </div>
+            </div>
+            <p id="report-message" class="form-message" aria-live="polite"></p>
+        </section>
+
+        <section class="dashboard-grid">
+            <article class="card metric-card">
+                <span>Revenue</span>
+                <h2 id="report-revenue">TSh 0</h2>
+            </article>
+            <article class="card metric-card">
+                <span>Profit</span>
+                <h2 id="report-profit">TSh 0</h2>
+            </article>
+            <article class="card metric-card">
+                <span>Sales</span>
+                <h2 id="report-sales-count">0</h2>
+            </article>
+            <article class="card metric-card">
+                <span>Items Sold</span>
+                <h2 id="report-items-sold">0</h2>
+            </article>
+            <article class="card metric-card">
+                <span>Average Sale</span>
+                <h2 id="report-average-sale">TSh 0</h2>
+            </article>
+            <article class="card metric-card">
+                <span>Outstanding Debt</span>
+                <h2 id="report-debt">TSh 0</h2>
+            </article>
+        </section>
+
+        <section class="card">
+            <div class="card-header">
+                <div>
+                    <h2>Sales Performance</h2>
+                    <p>Revenue and profit by day.</p>
+                </div>
+            </div>
+            <div class="table-wrapper">
+                <table class="data-table">
+                    <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Revenue</th>
+                        <th>Profit</th>
+                        <th>Transactions</th>
+                    </tr>
+                    </thead>
+                    <tbody id="report-daily-body">
+                    <tr><td colspan="4">Loading...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="dashboard-grid">
+            <article class="card">
+                <div class="card-header"><h2>Top Products</h2></div>
+                <div class="table-wrapper">
+                    <table class="data-table">
+                        <thead>
+                        <tr><th>Product</th><th>Qty</th><th>Revenue</th><th>Profit</th></tr>
+                        </thead>
+                        <tbody id="report-products-body">
+                        <tr><td colspan="4">Loading...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </article>
+
+            <article class="card">
+                <div class="card-header"><h2>Payment Methods</h2></div>
+                <div class="table-wrapper">
+                    <table class="data-table">
+                        <thead>
+                        <tr><th>Method</th><th>Transactions</th><th>Amount</th></tr>
+                        </thead>
+                        <tbody id="report-payments-body">
+                        <tr><td colspan="3">Loading...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </article>
+        </section>
+
+        <section class="dashboard-grid">
+            <article class="card">
+                <div class="card-header"><h2>Inventory Snapshot</h2></div>
+                <div class="dashboard-grid compact-grid">
+                    <div><span>Total Products</span><strong id="report-inventory-products">0</strong></div>
+                    <div><span>Units in Stock</span><strong id="report-inventory-stock">0</strong></div>
+                    <div><span>Stock Value</span><strong id="report-inventory-value">TSh 0</strong></div>
+                </div>
+            </article>
+
+            <article class="card">
+                <div class="card-header"><h2>Low Stock</h2></div>
+                <div id="report-low-stock"><div class="empty-state">Loading...</div></div>
+            </article>
+        </section>
+
+        <section class="card">
+            <div class="card-header">
+                <div>
+                    <h2>Staff Performance</h2>
+                    <p>Sales recorded by team member.</p>
+                </div>
+            </div>
+            <div class="table-wrapper">
+                <table class="data-table">
+                    <thead>
+                    <tr><th>Name</th><th>Role</th><th>Sales</th><th>Revenue</th><th>Profit</th></tr>
+                    </thead>
+                    <tbody id="report-staff-body">
+                    <tr><td colspan="5">Loading...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+</div>
+<script src="../js/auth.js"></script>
+<script src="../js/reports.js"></script>
+    <script src="/js/offline-sync.js"></script>
+<script src="/js/i18n.js"></script></body>
+</html>

@@ -1,0 +1,11 @@
+"use strict";
+const express=require('express');
+const {requireAuth,authorizeRoles}=require('../middleware/authMiddleware');
+const c=require('../controllers/expenseController');
+const r=express.Router();
+r.use(requireAuth);
+r.get('/',c.listExpenses);
+r.post('/',c.createExpense);
+r.put('/:id',authorizeRoles('owner','manager'),c.updateExpense);
+r.delete('/:id',authorizeRoles('owner','manager'),c.deleteExpense);
+module.exports=r;

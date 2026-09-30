@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#071B35">
+    <title>Akaunti Yangu | DukaFlow</title>
+    <link rel="manifest" href="../manifest.json">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="icon" href="/assets/dukaflow-icon.png" type="image/png">
+</head>
+<body>
+<div class="app-layout">
+    <aside class="sidebar">
+        <div class="sidebar-brand"><h2>DukaFlow</h2><span>Akaunti</span></div>
+        <nav class="sidebar-nav"></nav>
+    </aside>
+
+    <main class="main-content">
+        <section class="page-content df-account-page">
+            <div class="page-heading df-account-heading">
+                <div>
+                    <p class="section-label">AKAUNTI</p>
+                    <h1>Akaunti Yangu</h1>
+                    <p>Simamia wasifu wako na usalama wa akaunti.</p>
+                </div>
+            </div>
+
+            <section class="df-account-hero">
+                <div class="df-account-avatar" id="account-avatar">U</div>
+                <div class="df-account-identity">
+                    <span class="df-account-badge">● Akaunti hai</span>
+                    <h2 id="account-name">Inapakia...</h2>
+                    <p id="account-email">—</p>
+                    <div class="df-account-meta">
+                        <span id="account-role">—</span>
+                        <span>•</span>
+                        <span id="account-business">—</span>
+                    </div>
+                </div>
+                <a href="/business/" class="secondary-button" id="account-business-link">Mipangilio ya biashara</a>
+            </section>
+
+            <section class="df-account-grid">
+                <article class="card df-account-card">
+                    <div class="card-header">
+                        <p class="section-label">WASIFU</p>
+                        <h2>Taarifa za Akaunti</h2>
+                    </div>
+                    <div id="account-profile" class="df-profile-details">
+                        <div class="df-profile-skeleton"></div>
+                        <div class="df-profile-skeleton"></div>
+                        <div class="df-profile-skeleton"></div>
+                    </div>
+                </article>
+
+                <article class="card df-account-card">
+                    <div class="card-header">
+                        <p class="section-label">USALAMA</p>
+                        <h2>Badilisha Nenosiri</h2>
+                        <p class="df-card-subtitle">Tumia nenosiri refu na la kipekee kwa usalama zaidi.</p>
+                    </div>
+                    <form id="account-password-form" class="df-account-form">
+                        <label class="form-field"><span>Nenosiri la sasa</span><input id="account-current-password" type="password" required autocomplete="current-password" placeholder="••••••••••"></label>
+                        <label class="form-field"><span>Nenosiri jipya</span><input id="account-new-password" type="password" required minlength="10" autocomplete="new-password" placeholder="Angalau herufi 10"></label>
+                        <label class="form-field"><span>Thibitisha nenosiri jipya</span><input id="account-confirm-password" type="password" required minlength="10" autocomplete="new-password" placeholder="Rudia nenosiri"></label>
+                        <p id="account-message" class="form-message"></p>
+                        <button id="account-password-button" class="primary-button" type="submit">Hifadhi nenosiri</button>
+                    </form>
+                </article>
+            </section>
+
+            <section class="df-account-security-strip">
+                <div><span class="df-security-icon">✓</span><div><strong>Session salama</strong><small>DukaFlow hutumia session ya server na hailazimishi secrets kwenye browser.</small></div></div>
+                <a href="/audit-logs/">Angalia historia ya mfumo →</a>
+            </section>
+        </section>
+    </main>
+</div>
+<script src="../js/auth.js"></script>
+<script src="../js/account.js"></script>
+<script src="/js/offline-sync.js"></script>
+<script src="/js/i18n.js"></script>
+</body>
+</html>

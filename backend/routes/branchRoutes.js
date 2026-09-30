@@ -1,0 +1,12 @@
+"use strict";
+const express=require("express");
+const {requireAuth,authorizeRoles}=require("../middleware/authMiddleware");
+const c=require("../controllers/branchController");
+const router=express.Router();
+router.use(requireAuth);
+router.get("/",c.listBranches);
+router.get("/current",c.currentBranch);
+router.post("/select",c.selectBranch);
+router.post("/",authorizeRoles("owner"),c.createBranch);
+router.patch("/:id",authorizeRoles("owner"),c.updateBranch);
+module.exports=router;

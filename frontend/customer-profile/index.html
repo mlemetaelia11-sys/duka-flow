@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0f172a"><title>Customer Profile | DukaFlow</title>
+    <link rel="manifest" href="../manifest.json"><link rel="stylesheet" href="../css/style.css">
+    <link rel="icon" href="/assets/dukaflow-icon.png" type="image/png">
+</head>
+<body>
+<div class="app-layout">
+    <aside class="sidebar"><div class="sidebar-brand"><h2>DukaFlow</h2><span>Customer 360</span></div><nav class="sidebar-nav"></nav></aside>
+    <main class="main-content">
+        <header class="page-header"><div><p class="section-label">Customer 360</p><h1 id="customer-title">Customer Profile</h1><p id="customer-subtitle">Loading...</p></div><div class="table-actions" id="customer-contact-actions"></div></header>
+
+        <section class="stats-grid">
+            <article class="stat-card"><p class="stat-label">Total Purchases</p><h2 id="customer-total-purchases" class="stat-value">TSh 0</h2></article>
+            <article class="stat-card"><p class="stat-label">Sales</p><h2 id="customer-sales-count" class="stat-value">0</h2></article>
+            <article class="stat-card"><p class="stat-label">Outstanding Debt</p><h2 id="customer-debt" class="stat-value">TSh 0</h2></article>
+            <article class="stat-card"><p class="stat-label">Loyalty Points</p><h2 id="customer-points" class="stat-value">0</h2></article>
+        </section>
+
+        <section class="dashboard-grid">
+            <article class="card"><div class="card-header"><h2>Purchase History</h2></div><div class="table-wrapper"><table class="data-table"><thead><tr><th>Receipt</th><th>Date</th><th>Total</th><th>Paid</th><th>Profit</th><th>Status</th></tr></thead><tbody id="customer-sales-body"><tr><td colspan="6">Loading...</td></tr></tbody></table></div></article>
+            <article class="card"><div class="card-header"><h2>Debts</h2></div><div class="table-wrapper"><table class="data-table"><thead><tr><th>Sale</th><th>Total</th><th>Paid</th><th>Balance</th><th>Due</th><th>Status</th></tr></thead><tbody id="customer-debts-body"><tr><td colspan="6">Loading...</td></tr></tbody></table></div></article>
+        </section>
+
+        <section class="dashboard-grid">
+            <article class="card"><div class="card-header"><div><p class="section-label">Relationship notes</p><h2>Customer Notes</h2></div></div><form id="customer-note-form"><label class="form-field"><span>Add Note</span><textarea id="customer-note" rows="3" maxlength="1000" required></textarea></label><button class="primary-button" type="submit">Add Note</button><p id="customer-note-message" class="form-message"></p></form><div id="customer-notes-list"></div></article>
+            <article class="card"><div class="card-header"><div><p class="section-label">Loyalty</p><h2>Points</h2></div></div><form id="loyalty-form"><div class="form-grid"><label class="form-field"><span>Points</span><input id="loyalty-points" type="number" step="1" required></label><label class="form-field"><span>Type</span><select id="loyalty-type"><option value="earn">Earn</option><option value="redeem">Redeem</option><option value="adjustment">Adjustment</option></select></label></div><label class="form-field"><span>Description</span><input id="loyalty-description" maxlength="255"></label><button class="secondary-button" type="submit">Update Points</button><p id="loyalty-message" class="form-message"></p></form><div id="loyalty-history"></div></article>
+        </section>
+    </main>
+</div>
+<script src="../js/auth.js"></script><script src="../js/customer-profile.js"></script>
+    <script src="/js/offline-sync.js"></script>
+<script src="/js/i18n.js"></script></body>
+</html>

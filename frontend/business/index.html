@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#082f68">
+    <title>Business Settings | DukaFlow</title>
+    <link rel="manifest" href="../manifest.json">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="icon" href="/assets/dukaflow-icon.png" type="image/png">
+</head>
+<body>
+<div class="app-layout">
+    <aside class="sidebar">
+        <div class="sidebar-brand"><h2>DukaFlow</h2><span>Business Workspace</span></div>
+        <nav class="sidebar-nav"></nav>
+    </aside>
+
+    <main class="main-content">
+        <header class="page-header">
+            <div>
+                <p class="section-label">Settings</p>
+                <h1>Business Settings</h1>
+                <p>Manage your business identity, contact details and locale.</p>
+            </div>
+        </header>
+
+        <section class="dashboard-grid settings-grid">
+            <article class="card settings-card">
+                <div class="card-header">
+                    <div>
+                        <p class="section-label">Business profile</p>
+                        <h2>Business information</h2>
+                        <p>These details appear across your DukaFlow workspace.</p>
+                    </div>
+                </div>
+
+                <form id="business-form">
+                    <div class="form-grid">
+                        <label class="form-field"><span>Business Name</span><input id="business-name" required maxlength="150" autocomplete="organization"></label>
+                        <label class="form-field"><span>Phone</span><input id="business-phone" maxlength="30" autocomplete="tel"></label>
+                        <label class="form-field"><span>Email</span><input id="business-email" type="email" maxlength="255" autocomplete="email"></label>
+                        <label class="form-field"><span>Address</span><input id="business-address" maxlength="255" autocomplete="street-address"></label>
+                        <label class="form-field"><span>City</span><input id="business-city" maxlength="100" autocomplete="address-level2"></label>
+                        <label class="form-field"><span>Country</span><input id="business-country" maxlength="100" autocomplete="country-name"></label>
+                        <label class="form-field"><span>Currency</span><input id="business-currency" maxlength="10" placeholder="TZS"></label>
+                        <label class="form-field"><span>Timezone</span><input id="business-timezone" maxlength="80" placeholder="Africa/Dar_es_Salaam"></label>
+                    </div>
+                    <p id="business-message" class="form-message" role="alert" aria-live="polite"></p>
+                    <div class="card-footer-actions settings-actions">
+                        <button id="business-save" class="primary-button" type="submit">Save Changes</button>
+                    </div>
+                </form>
+            </article>
+
+            <article class="card settings-card password-settings-card">
+                <div class="card-header">
+                    <div>
+                        <p class="section-label">Security</p>
+                        <h2>Change Password</h2>
+                        <p>Use a strong password that only you know.</p>
+                    </div>
+                </div>
+
+                <form id="password-form">
+                    <label class="form-field"><span>Current Password</span><input id="current-password" type="password" required autocomplete="current-password"></label>
+                    <label class="form-field"><span>New Password</span><input id="new-password" type="password" required minlength="10" autocomplete="new-password"></label>
+                    <label class="form-field"><span>Confirm Password</span><input id="confirm-password" type="password" required minlength="10" autocomplete="new-password"></label>
+                    <p id="password-message" class="form-message" role="alert" aria-live="polite"></p>
+                    <button class="secondary-button" type="submit">Change Password</button>
+                </form>
+            </article>
+        </section>
+    </main>
+</div>
+<script src="../js/auth.js"></script>
+<script src="../js/business.js"></script>
+    <script src="/js/offline-sync.js"></script>
+<script src="/js/i18n.js"></script></body>
+</html>

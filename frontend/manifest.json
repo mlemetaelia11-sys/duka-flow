@@ -1,0 +1,17 @@
+{
+  "name": "DukaFlow Business Manager",
+  "short_name": "DukaFlow",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f4f8fd",
+  "theme_color": "#062a63",
+  "description": "Modern business management for products, sales, stock, customers and finances.",
+  "icons": [
+    {
+      "src": "/assets/dukaflow-icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

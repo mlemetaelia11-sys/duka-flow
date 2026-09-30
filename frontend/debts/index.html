@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debts | DukaFlow</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="icon" href="/assets/dukaflow-icon.png" type="image/png">
+</head>
+<body>
+
+    <header class="site-header">
+        <div class="container header-content">
+
+            <a class="brand" href="/">DukaFlow</a>
+
+            <nav class="main-nav" aria-label="Main navigation">
+                <a href="/">Dashboard</a>
+                <a href="/products/">Products</a>
+                <a href="/sales/">Sales</a>
+                <a href="/customers/">Customers</a>
+                <a href="/debts/">Debts</a>
+            </nav>
+
+        </div>
+    </header>
+
+    <main class="container page-content">
+
+        <section class="page-heading">
+            <div>
+                <p class="section-label">Credit Management</p>
+                <h1>Debts</h1>
+                <p class="section-description">
+                    Track customer balances, payments, and outstanding credit.
+                </p>
+            </div>
+
+           <button
+    id="open-payment-modal"
+    class="primary-button"
+    type="button"
+>
+    Record Payment
+</button>
+        </section>
+
+        <section class="debt-summary-grid">
+
+            <article class="debt-summary-card">
+                <p class="stat-label">Total Outstanding</p>
+                <p class="stat-value">—</p>
+                <p class="stat-note">Waiting for debt data</p>
+            </article>
+
+            <article class="debt-summary-card">
+                <p class="stat-label">Customers With Debt</p>
+                <p class="stat-value">—</p>
+                <p class="stat-note">Waiting for customer data</p>
+            </article>
+
+            <article class="debt-summary-card">
+                <p class="stat-label">Overdue Debts</p>
+                <p class="stat-value">—</p>
+                <p class="stat-note">Waiting for debt data</p>
+            </article>
+
+        </section>
+
+        <section class="debts-card">
+
+            <div class="debts-toolbar">
+
+                <label class="search-field">
+                    <span>Search debts</span>
+                    <input
+                        type="search"
+                        placeholder="Search by customer name or phone..."
+                        aria-label="Search debts"
+                    >
+                </label>
+
+                <label class="filter-field">
+                    <span>Status</span>
+
+                    <select id="debt-status-filter" name="status">
+                        <option value="all">All statuses</option>
+                        <option value="unpaid">Unpaid</option>
+                        <option value="partial">Partially Paid</option>
+                        <option value="paid">Paid</option>
+                        <option value="overdue">Overdue</option>
+                    </select>
+                </label>
+
+            </div>
+
+            <div class="table-wrapper">
+
+                <table class="debts-table">
+
+                    <thead>
+                        <tr>
+                            <th scope="col">Customer</th>
+                            <th scope="col">Original Debt</th>
+                            <th scope="col">Paid</th>
+                            <th scope="col">Remaining</th>
+                            <th scope="col">Due Date</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="debts-table-body">
+
+                        <tr>
+                            <td colspan="7">
+
+                                <div class="table-empty-state">
+                                    <strong>No debts yet</strong>
+
+                                    <span>
+                                        Customer credit records will appear here.
+                                    </span>
+                                </div>
+
+                            </td>
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <div
+    id="payment-modal"
+    class="modal"
+    aria-hidden="true"
+>
+    <div
+        class="modal-overlay"
+        data-close-payment-modal
+    ></div>
+
+    <section
+        class="modal-content"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="payment-modal-title"
+    >
+        <div class="modal-header">
+            <div>
+                <p class="section-label">Debts</p>
+                <h2 id="payment-modal-title">Record Payment</h2>
+            </div>
+
+            <button
+                class="modal-close"
+                type="button"
+                data-close-payment-modal
+                aria-label="Close dialog"
+            >
+                ×
+            </button>
+        </div>
+
+        <form id="payment-form">
+
+            <label class="form-field">
+                <span>Customer</span>
+
+                <select
+                    id="payment-customer"
+                    name="payment-customer"
+                    required
+                >
+                    <option value="">Select customer</option>
+                </select>
+            </label>
+
+            <label class="form-field">
+                <span>Amount Paid</span>
+
+                <input
+                    type="number"
+                    id="payment-amount"
+                    name="payment-amount"
+                    min="0"
+                    step="0.01"
+                    required
+                >
+            </label>
+
+            <label class="form-field">
+                <span>Payment Method</span>
+
+                <select
+                    id="payment-method"
+                    name="paymentMethod"
+                    required
+                >
+                    <option value="cash">Cash</option>
+                    <option value="mobile_money">Mobile Money</option>
+                    <option value="bank">Bank</option>
+                </select>
+            </label>
+
+            <label class="form-field">
+                <span>Notes</span>
+
+                <textarea
+                    id="payment-notes"
+                    name="notes"
+                ></textarea>
+            </label>
+
+            <div
+                id="payment-form-message"
+                class="form-message"
+                role="alert"
+                aria-live="polite"
+            ></div>
+
+            <div class="modal-actions">
+
+                <button
+                    class="secondary-button"
+                    type="button"
+                    data-close-payment-modal
+                >
+                    Cancel
+                </button>
+
+                <button
+                    class="primary-button"
+                    type="submit"
+                >
+                    Record Payment
+                </button>
+
+            </div>
+
+        </form>
+    </section>
+</div>
+
+<script src="../js/auth.js"></script>
+<script src="../js/debts.js"></script>
+
+<!-- PAYMENT HISTORY MODAL -->
+
+<div
+    id="payment-history-modal"
+    class="modal"
+    aria-hidden="true"
+>
+    <div class="modal-content">
+
+        <div class="modal-header">
+
+            <div>
+                <h2>Payment History</h2>
+                <p id="payment-history-customer"></p>
+            </div>
+
+            <button
+                type="button"
+                id="close-payment-history"
+                class="modal-close"
+            >
+                ×
+            </button>
+
+        </div>
+
+        <div class="payment-history-summary">
+
+            <div>
+                <span>Total Debt</span>
+                <strong id="history-total-debt">
+                    TSh 0
+                </strong>
+            </div>
+
+            <div>
+                <span>Paid</span>
+                <strong id="history-total-paid">
+                    TSh 0
+                </strong>
+            </div>
+
+            <div>
+                <span>Balance</span>
+                <strong id="history-balance">
+                    TSh 0
+                </strong>
+            </div>
+
+        </div>
+
+        <div class="table-wrapper">
+
+            <table class="data-table">
+
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Amount</th>
+                        <th>Method</th>
+                        <th>Notes</th>
+                    </tr>
+                </thead>
+
+                <tbody id="payment-history-body">
+                    <tr>
+                        <td colspan="4">
+                            Loading payment history...
+                        </td>
+                    </tr>
+                </tbody>
+
+            </table>
+
+        </div>
+
+        <div class="modal-footer">
+
+            <button
+                type="button"
+                id="close-payment-history-bottom"
+                class="btn btn-secondary"
+            >
+                Close
+            </button>
+
+        </div>
+
+    </div>
+</div>
+
+    <script src="/js/offline-sync.js"></script>
+<script src="/js/i18n.js"></script></body>
+</html>

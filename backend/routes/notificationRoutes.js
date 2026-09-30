@@ -1,0 +1,10 @@
+"use strict";
+const express=require("express");
+const {requireAuth}=require("../middleware/authMiddleware");
+const {listNotifications,unreadCount,markRead,markAllRead}=require("../controllers/notificationController");
+const router=express.Router();
+router.get("/",requireAuth,listNotifications);
+router.get("/unread-count",requireAuth,unreadCount);
+router.patch("/:id/read",requireAuth,markRead);
+router.patch("/read-all",requireAuth,markAllRead);
+module.exports=router;

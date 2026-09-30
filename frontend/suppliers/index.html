@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>DukaFlow - Suppliers</title>
+
+    <link
+        rel="stylesheet"
+        href="../css/style.css"
+    >
+    <link rel="icon" href="/assets/dukaflow-icon.png" type="image/png">
+</head>
+
+<body>
+
+<div class="app-layout">
+
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+        <div class="sidebar-brand">
+            <h2>DukaFlow</h2>
+            <span>Retail Management</span>
+        </div>
+
+
+        <nav class="sidebar-nav">
+
+            <a href="../index.html">
+                Dashboard
+            </a>
+
+            <a href="../products/index.html">
+                Products
+            </a>
+
+            <a href="../sales/index.html">
+                Sales
+            </a>
+
+            <a href="../customers/index.html">
+                Customers
+            </a>
+
+            <a href="../debts/index.html">
+                Debts
+            </a>
+
+            <a href="../suppliers/index.html"
+               class="active">
+                Suppliers
+            </a>
+
+        </nav>
+
+    </aside>
+
+
+    <!-- MAIN -->
+
+    <main class="main-content">
+
+        <header class="page-header">
+
+            <div>
+                <h1>Suppliers</h1>
+
+                <p>
+                    Manage your suppliers and purchasing relationships
+                </p>
+            </div>
+
+            <button
+                type="button"
+                id="add-supplier-btn"
+                class="btn btn-primary"
+            >
+                + Add Supplier
+            </button>
+
+        </header>
+
+
+        <!-- SEARCH -->
+
+        <div class="card">
+
+            <input
+                type="search"
+                id="supplier-search"
+                placeholder="Search suppliers..."
+                class="form-control"
+            >
+
+        </div>
+
+
+        <!-- TABLE -->
+
+        <div class="card">
+
+            <div class="table-wrapper">
+
+                <table class="data-table">
+
+                    <thead>
+
+                        <tr>
+                            <th>Supplier</th>
+                            <th>Phone</th>
+                            <th>Purchases</th>
+                            <th>Purchase Value</th>
+                            <th>Outstanding</th>
+                            <th>Actions</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody id="suppliers-table-body">
+
+                        <tr>
+                            <td colspan="6">
+                                Loading suppliers...
+                            </td>
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+
+<!-- SUPPLIER MODAL -->
+
+<div
+    id="supplier-modal"
+    class="modal"
+    aria-hidden="true"
+>
+
+    <div class="modal-content">
+
+        <div class="modal-header">
+
+            <div>
+                <h2 id="supplier-modal-title">
+                    Add Supplier
+                </h2>
+            </div>
+
+            <button
+                type="button"
+                id="close-supplier-modal"
+                class="modal-close"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <form id="supplier-form">
+
+            <div class="form-group">
+
+                <label for="supplier-name">
+                    Supplier Name
+                </label>
+
+                <input
+                    type="text"
+                    id="supplier-name"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="supplier-phone">
+                    Phone
+                </label>
+
+                <input
+                    type="tel"
+                    id="supplier-phone"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="supplier-email">
+                    Email
+                </label>
+
+                <input
+                    type="email"
+                    id="supplier-email"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="supplier-address">
+                    Address
+                </label>
+
+                <input
+                    type="text"
+                    id="supplier-address"
+                >
+
+            </div>
+
+
+            <p id="supplier-form-message" class="form-message" role="alert"></p>
+
+            <div class="modal-footer">
+
+                <button
+                    type="button"
+                    id="cancel-supplier"
+                    class="btn btn-secondary"
+                >
+                    Cancel
+                </button>
+
+                <button
+                    type="submit"
+                    class="btn btn-primary"
+                    id="supplier-submit"
+                >
+                    Add Supplier
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<script src="../js/auth.js"></script>
+<script src="../js/suppliers.js"></script>
+
+    <script src="/js/offline-sync.js"></script>
+<script src="/js/i18n.js"></script></body>
+</html>

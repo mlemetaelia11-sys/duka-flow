@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0f172a">
+    <title>Dashboard Settings | DukaFlow</title>
+    <link rel="manifest" href="../manifest.json">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="icon" href="/assets/dukaflow-icon.png" type="image/png">
+</head>
+<body>
+<div class="app-layout">
+    <aside class="sidebar">
+        <div class="sidebar-brand"><h2>DukaFlow</h2><span>Retail Management</span></div>
+        <nav class="sidebar-nav"></nav>
+    </aside>
+    <main class="main-content">
+        <header class="page-header">
+            <div>
+                <p class="section-label">Dashboard</p>
+                <h1>Customize Dashboard</h1>
+                <p>Choose the widgets you want visible on your personal workspace.</p>
+            </div>
+        </header>
+
+        <section class="card">
+            <div id="widget-settings-list" class="settings-list">
+                <div class="empty-state">Loading preferences...</div>
+            </div>
+            <div class="card-footer-actions">
+                <a class="secondary-button" href="/">Back to Dashboard</a>
+                <button class="primary-button" id="save-widget-settings" type="button">Save Dashboard</button>
+            </div>
+            <p id="widget-settings-message" class="form-message" role="alert"></p>
+        </section>
+    </main>
+</div>
+<script src="../js/auth.js"></script>
+<script src="../js/dashboard-settings.js"></script>
+    <script src="/js/offline-sync.js"></script>
+<script src="/js/i18n.js"></script></body>
+</html>

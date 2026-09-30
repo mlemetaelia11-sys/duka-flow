@@ -1,0 +1,41 @@
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: dukaflow_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: change-me
+    volumes:
+      - dukaflow_pg:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d dukaflow_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  app:
+    build: .
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      HOST: 0.0.0.0
+      DATABASE_HOST: db
+      DATABASE_PORT: 5432
+      DATABASE_NAME: dukaflow_db
+      DATABASE_USER: postgres
+      DATABASE_PASSWORD: change-me
+      JWT_SECRET: change-this-in-production
+      JWT_EXPIRES_IN: 8h
+      APP_URL: http://localhost:3000
+      DEFAULT_CURRENCY: TZS
+      DEFAULT_TIMEZONE: Africa/Dar_es_Salaam
+
+volumes:
+  dukaflow_pg:

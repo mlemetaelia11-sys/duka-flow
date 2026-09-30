@@ -1,0 +1,38 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "DukaFlow retail management SaaS backend",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "browser-sync start --proxy http://localhost:3000 --files \"../frontend/**/*\" --host 0.0.0.0 --port 3001 --no-ui",
+    "migrate": "node scripts/migrate.js",
+    "backup": "node scripts/backup.js",
+    "restore": "node scripts/restore.js",
+    "register:pesapal-ipn": "node scripts/register-pesapal-ipn.js",
+    "test": "node tests/smoke-test.js && node tests/tenant-static-test.js && node --test tests/whatsapp-connection-test.js",
+    "test:static": "node tests/tenant-static-test.js",
+    "test:db": "node tests/tenant-db-test.js",
+    "test:qa": "node tests/production-qa.js",
+    "test:providers": "node tests/provider-integration-test.js",
+    "test:full": "node tests/full-system-test.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "cookie-parser": "^1.4.7",
+    "dotenv": "^18.0.4",
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3",
+    "pg": "^8.23.0"
+  },
+  "devDependencies": {
+    "browser-sync": "^3.0.4"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

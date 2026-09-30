@@ -1,0 +1,1 @@
+"use strict";const express=require('express');const {requireAuth}=require('../middleware/authMiddleware');const c=require('../controllers/assistantController');const r=express.Router();r.use(requireAuth);r.post('/confirm/:id',c.confirmAction);r.post('/',c.answerAssistant);r.get('/',c.answerAssistant);module.exports=r;

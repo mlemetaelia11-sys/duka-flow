@@ -1,0 +1,11 @@
+"use strict";
+const express=require("express");
+const {requireAuth,authorizeRoles}=require("../middleware/authMiddleware");
+const {getCurrentRegister,openRegister,addCashMovement,closeRegister,getRegisterMovements}=require("../controllers/cashRegisterController");
+const router=express.Router();
+router.get("/",requireAuth,authorizeRoles("owner","manager","cashier"),getCurrentRegister);
+router.get("/movements",requireAuth,authorizeRoles("owner","manager","cashier"),getRegisterMovements);
+router.post("/open",requireAuth,authorizeRoles("owner","manager","cashier"),openRegister);
+router.post("/movements",requireAuth,authorizeRoles("owner","manager","cashier"),addCashMovement);
+router.post("/close",requireAuth,authorizeRoles("owner","manager","cashier"),closeRegister);
+module.exports=router;
