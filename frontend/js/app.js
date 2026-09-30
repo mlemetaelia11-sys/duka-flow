@@ -75,6 +75,11 @@ function setupMobileNavigation() {
         return;
     }
 
+    if (typeof window.DukaFlowSidebar?.toggle === "function") {
+        menuButton.addEventListener("click", () => window.DukaFlowSidebar.toggle());
+        return;
+    }
+
     menuButton.addEventListener("click", () => {
         sidebar.classList.toggle("active");
         menuButton.classList.toggle("active");
@@ -493,24 +498,182 @@ function isProductModalOpen() {
 
 
 async function setupProductImageUpload() {
-    if (!productImageInput) return;
+    if (!productImageInput) {
+        return;
+    }
+
     productImageInput.addEventListener("change", async () => {
         const file = productImageInput.files?.[0];
-        if (!file) return;
-        if (file.size > 5 * 1024 * 1024) { productImageInput.value = ""; if (productImageStatus) productImageStatus.textContent = "Picha lazima iwe chini ya 5MB."; return; }
-        if (!/^image\/(png|jpeg|webp|gif)$/i.test(file.type)) { productImageInput.value = ""; if (productImageStatus) productImageStatus.textContent = "Aina ya picha haikubaliki."; return; }
-        if (productImageStatus) productImageStatus.textContent = "Inapakia picha...";
+
+        if (!file) {
+            return;
+        }
+
+        if (file.size > 5 * 1024 * 1024) {
+            productImageInput.value = "";
+
+            if (productImageStatus) {
+                productImageStatus.textContent =
+                    "Picha lazima iwe chini ya 5MB.";
+            }
+
+            return;
+        }
+
+        if (!/^image\/(png|jpeg|webp|gif)$/i.test(file.type)) {
+            productImageInput.value = "";
+
+            if (productImageStatus) {
+                productImageStatus.textContent =
+                    "Aina ya picha haikubaliki.";
+            }
+
+            return;
+        }
+
+        if (productImageStatus) {
+            productImageStatus.textContent = "Inapakia picha...";
+        }
+
+        const isDevelopment =
+            ["localhost", "127.0.0.1"].includes(
+                window.location.hostname
+            );
+
+        const logUpload = (stage, details = {}) => {
+            if (isDevelopment) {
+                console.debug("Product image upload", {
+                    stage,
+                    contentType: file.type,
+                    ...details
+                });
+            }
+        };
+
+        let stage = "presign";
+
         try {
-            const presign = await fetch("/api/integrations/storage/presign", { method: "POST", headers: { "Content-Type": "application/json", Accept: "application/json" }, body: JSON.stringify({ filename: file.name, contentType: file.type, folder: "products" }) });
-            const payload = await presign.json().catch(() => ({}));
-            if (!presign.ok) throw new Error(payload.message || "Picha haikupakiwa.");
-            const upload = await fetch(payload.uploadUrl, { method: "PUT", headers: { "content-type": file.type }, body: file });
-            if (!upload.ok) throw new Error("Picha haikupakiwa kwenye storage.");
-            if (productImageKeyInput) productImageKeyInput.value = payload.key;
-            if (productImageUrlInput) productImageUrlInput.value = payload.publicUrl || `/api/integrations/storage/view?key=${encodeURIComponent(payload.key)}`;
-            if (productImageStatus) productImageStatus.textContent = "✓ Picha imepakiwa.";
+            /*
+             * STEP 1:
+             * Ask DukaFlow backend for a presigned R2 upload URL.
+             *
+             * This request stays authenticated because it talks
+             * to our own DukaFlow API.
+             */
+            const presign = await fetch(
+                "/api/integrations/storage/presign",
+                {
+                    method: "POST",
+                    credentials: "include",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Accept: "application/json"
+                    },
+                    body: JSON.stringify({
+                        filename: file.name,
+                        contentType: file.type,
+                        folder: "products"
+                    })
+                }
+            );
+
+            logUpload("presign", {
+                httpStatus: presign.status
+            });
+
+            const payload =
+                await presign.json().catch(() => ({}));
+
+            if (!presign.ok) {
+                throw new Error(
+                    payload.message ||
+                    "Picha haikuweza kuandaliwa kwa upload."
+                );
+            }
+
+            if (!payload.uploadUrl || !payload.key) {
+                throw new Error(
+                    "Storage upload URL haikurudi vizuri."
+                );
+            }
+
+            /*
+             * STEP 2:
+             * Upload directly to Cloudflare R2.
+             *
+             * IMPORTANT:
+             * This is a cross-origin request to R2.
+             * It must NOT carry DukaFlow cookies/session credentials.
+             */
+            stage = "r2-put";
+
+            const upload = await fetch(
+                payload.uploadUrl,
+                {
+                    method: "PUT",
+                    mode: "cors",
+                    credentials: "omit",
+                    headers: {
+                        "Content-Type": file.type
+                    },
+                    body: file
+                }
+            );
+
+            logUpload("r2-put", {
+                httpStatus: upload.status
+            });
+
+            if (!upload.ok) {
+                let providerMessage = "";
+
+                try {
+                    providerMessage = (
+                        await upload.text()
+                    ).trim();
+                } catch {
+                    providerMessage = "";
+                }
+
+                throw new Error(
+                    providerMessage ||
+                    `Upload ya picha imekataliwa na storage. (${upload.status})`
+                );
+            }
+
+            /*
+             * STEP 3:
+             * Save the storage key/url into the product form only
+             * after R2 confirms success.
+             */
+            if (productImageKeyInput) {
+                productImageKeyInput.value = payload.key;
+            }
+
+            if (productImageUrlInput) {
+                productImageUrlInput.value =
+                    payload.publicUrl ||
+                    `/api/integrations/storage/view?key=${encodeURIComponent(
+                        payload.key
+                    )}`;
+            }
+
+            if (productImageStatus) {
+                productImageStatus.textContent =
+                    "✓ Picha imepakiwa.";
+            }
         } catch (error) {
-            if (productImageStatus) productImageStatus.textContent = error.message || "Picha haikupakiwa.";
+            logUpload(stage, {
+                errorName: error?.name || "Error",
+                errorMessage: error?.message || "Unknown error"
+            });
+
+            if (productImageStatus) {
+                productImageStatus.textContent =
+                    error?.message ||
+                    "Picha haikupakiwa.";
+            }
+
             productImageInput.value = "";
         }
     });
