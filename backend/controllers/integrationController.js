@@ -723,29 +723,31 @@ async function uploadStorageObject(req, res) {
         });
     }
 
-    if (!Buffer.isBuffer(req.body)) {
+    const body = req.body;
+
+    if (!Buffer.isBuffer(body)) {
         return res.status(400).json({
-            message: "Image file is required."
+            message: "Image body was not received as binary data.",
+            debug: {
+                bodyType: typeof body,
+                isBuffer: false
+            }
         });
     }
 
-    if (req.body.length === 0) {
+    if (!body.length) {
         return res.status(400).json({
             message: "Image file is empty."
         });
     }
 
-    /*
-     * Keep this below Vercel's request-body limit.
-     * Product image upload target: 4MB maximum.
-     */
-    const maxSize =
-        4 * 1024 * 1024;
+    const maxSize = 4 * 1024 * 1024;
 
-    if (req.body.length > maxSize) {
+    if (body.length > maxSize) {
         return res.status(413).json({
-            message:
-                "Picha lazima iwe chini ya 4MB."
+            message: "Picha lazima iwe chini ya 4MB.",
+            sizeBytes: body.length,
+            maxBytes: maxSize
         });
     }
 
@@ -756,60 +758,98 @@ async function uploadStorageObject(req, res) {
         .trim()
         .toLowerCase();
 
-    if (!isSupportedImage(contentType)) {
+    if (!/^image\/(png|jpeg|webp|gif)$/i.test(contentType)) {
         return res.status(400).json({
             message:
-                "Aina ya picha haikubaliki. Tumia PNG, JPEG, WEBP au GIF."
+                "Aina ya picha haikubaliki.",
+            contentType
         });
     }
 
-    const filename = sanitizeFilename(
+    const rawFilename =
         req.query?.filename ||
         req.headers["x-file-name"] ||
-        "product-image"
+        "product-image";
+
+    const filename = sanitizeFilename(
+        rawFilename
     );
 
     const folder = sanitizeFolder(
         req.query?.folder || "products"
     );
 
-    /*
-     * Tenant-scoped key.
-     */
     const key =
         `businesses/${bid}/${folder}/${crypto.randomUUID()}-${filename}`;
 
     try {
-        await putObject(
+        console.log("R2 DIRECT UPLOAD START", {
+            businessId: bid,
+            keyPrefix: `businesses/${bid}/${folder}/`,
+            contentType,
+            sizeBytes: body.length
+        });
+
+        const result = await putObject(
             key,
-            req.body,
+            body,
             contentType
         );
 
-        const objectPublicUrl =
-            publicUrl(key);
-
-        const viewUrl =
-            `/api/integrations/storage/view?key=${encodeURIComponent(
-                key
-            )}`;
+        console.log("R2 DIRECT UPLOAD SUCCESS", {
+            businessId: bid,
+            keyPrefix: `businesses/${bid}/${folder}/`,
+            etag:
+                typeof result?.ETag === "string"
+                    ? result.ETag
+                    : undefined
+        });
 
         return res.status(201).json({
             ok: true,
             key,
-            publicUrl:
-                objectPublicUrl || null,
-            viewUrl
+            publicUrl: publicUrl(key),
+            viewUrl:
+                `/api/integrations/storage/view?key=${encodeURIComponent(
+                    key
+                )}`
         });
     } catch (error) {
-        logR2Error(
-            "direct-upload",
-            error
+        const safeError = {
+            name:
+                typeof error?.name === "string"
+                    ? error.name
+                    : "Error",
+
+            code:
+                typeof error?.Code === "string"
+                    ? error.Code
+                    : typeof error?.code === "string"
+                        ? error.code
+                        : undefined,
+
+            statusCode:
+                Number.isInteger(
+                    error?.$metadata?.httpStatusCode
+                )
+                    ? error.$metadata.httpStatusCode
+                    : undefined,
+
+            message:
+                typeof error?.message === "string"
+                    ? error.message.slice(0, 500)
+                    : "Unknown R2 error"
+        };
+
+        console.error(
+            "R2 DIRECT UPLOAD FAILED",
+            safeError
         );
 
         return res.status(502).json({
             message:
-                "Failed to upload file to storage."
+                "Cloudflare R2 upload failed.",
+            error: safeError
         });
     }
 }
