@@ -154,6 +154,15 @@ async function pesapalIpn(req, res) {
     }
 }
 
+function logR2SigningError(operation, error) {
+    console.error("Cloudflare R2 signing failed", {
+        operation,
+        name: typeof error?.name === "string" ? error.name.slice(0, 80) : "Error",
+        code: typeof error?.Code === "string" ? error.Code.slice(0, 80) : undefined,
+        statusCode: Number.isInteger(error?.$metadata?.httpStatusCode) ? error.$metadata.httpStatusCode : undefined
+    });
+}
+
 async function viewStorageObject(req, res) {
     const bid = businessId(req);
     if (!bid) return res.status(401).json({ message: "Business context is missing." });
@@ -161,9 +170,10 @@ async function viewStorageObject(req, res) {
     const key = String(req.query?.key || "").trim();
     if (!key || !key.startsWith(`businesses/${bid}/`) || key.length > 1000) return res.status(400).json({ message: "Invalid storage object." });
     try {
-        return res.redirect(302, presignGet(key, 300));
+        return res.redirect(302, await presignGet(key, 300));
     } catch (error) {
-        return res.status(502).json({ message: error.message });
+        logR2SigningError("get", error);
+        return res.status(502).json({ message: "Failed to create storage download URL." });
     }
 }
 
@@ -176,9 +186,12 @@ async function presignUpload(req, res) {
     const folder = String(req.body?.folder || "uploads").replace(/[^a-zA-Z0-9/_-]/g, "").replace(/^\/+|\/+$/g, "") || "uploads";
     const key = `businesses/${bid}/${folder}/${crypto.randomUUID()}-${filename}`;
     try {
-        const uploadUrl = presignPut(key, contentType);
+        const uploadUrl = await presignPut(key, contentType, 900);
         return res.json({ key, uploadUrl, publicUrl: publicUrl(key), expiresIn: 900 });
-    } catch (error) { return res.status(502).json({ message: error.message }); }
+    } catch (error) {
+        logR2SigningError("put", error);
+        return res.status(502).json({ message: "Failed to create storage upload URL." });
+    }
 }
 
 async function testEmail(req, res) {

@@ -46,7 +46,7 @@ async function check(name, fn) {
         else console.log("SKIP Resend delivery (set PROVIDER_TEST_EMAIL to intentionally send a test email)");
     } else console.log("SKIP Resend (credentials not configured)");
 
-    if (status.storage.configured) { if (!(await check("Cloudflare R2 presign", async () => { const url = presignPut("provider-tests/health.txt", "text/plain", 60); if (!/^https:\/\//.test(url)) throw new Error("Invalid R2 presigned URL"); }))) failed = true; }
+    if (status.storage.configured) { if (!(await check("Cloudflare R2 presign", async () => { const url = await presignPut("provider-tests/health.txt", "text/plain", 60); if (!/^https:\/\//.test(url)) throw new Error("Invalid R2 presigned URL"); }))) failed = true; }
     else console.log("SKIP Cloudflare R2 (credentials not configured)");
 
     if (status.notifications.configured) {
