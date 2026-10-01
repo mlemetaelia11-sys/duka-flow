@@ -572,52 +572,170 @@ async function requestPasswordReset(req, res) {
     const email = normalizeEmail(req.body?.email);
 
     if (!validEmail(email)) {
-        return res.status(400).json({ message: "Enter a valid email address." });
+        return res.status(400).json({
+            message: "Enter a valid email address."
+        });
     }
 
     try {
         const result = await pool.query(
             `SELECT u.id, u.business_id
              FROM users u
-             INNER JOIN businesses b ON b.id = u.business_id AND b.is_active = TRUE
-             WHERE u.email = $1 AND u.is_active = TRUE
+             INNER JOIN businesses b
+               ON b.id = u.business_id
+              AND b.is_active = TRUE
+             WHERE u.email = $1
+               AND u.is_active = TRUE
              LIMIT 1`,
             [email]
         );
 
+        // Keep account enumeration protection.
         if (!result.rowCount) {
             return res.json({
-                message: "If an active account exists for that email, password reset instructions will be sent."
+                message:
+                    "If an active account exists for that email, password reset instructions will be sent."
             });
         }
 
-        const rawToken = crypto.randomBytes(32).toString("hex");
-        const tokenHash = crypto.createHash("sha256").update(rawToken).digest("hex");
+        const user = result.rows[0];
 
+        // Invalidate previous unused reset tokens for this user.
         await pool.query(
-            `INSERT INTO password_reset_tokens (business_id, user_id, token_hash, expires_at)
-             VALUES ($1, $2, $3, NOW() + INTERVAL '30 minutes')`,
-            [result.rows[0].business_id, result.rows[0].id, tokenHash]
+            `UPDATE password_reset_tokens
+             SET used_at = NOW()
+             WHERE user_id = $1
+               AND business_id = $2
+               AND used_at IS NULL`,
+            [user.id, user.business_id]
         );
 
-        const appUrl = String(process.env.APP_URL || "http://localhost:3000").replace(/\/$/, "");
-        const resetUrl = `${appUrl}/password-reset/?token=${encodeURIComponent(rawToken)}`;
-        if (process.env.RESEND_API_KEY && process.env.RESEND_FROM_EMAIL) {
-            await sendEmail({
-                to: email,
-                subject: "Reset your DukaFlow password",
-                html: `<div style="font-family:Arial,sans-serif;max-width:620px;margin:auto"><h2>DukaFlow password reset</h2><p>We received a request to reset your password.</p><p><a href="${resetUrl}" style="display:inline-block;padding:12px 18px;background:#2563eb;color:#fff;text-decoration:none;border-radius:8px">Reset password</a></p><p>This link expires in 30 minutes.</p></div>`,
-                text: `Reset your DukaFlow password: ${resetUrl}. This link expires in 30 minutes.`
+        const rawToken = crypto.randomBytes(32).toString("hex");
+        const tokenHash = crypto
+            .createHash("sha256")
+            .update(rawToken)
+            .digest("hex");
+
+        await pool.query(
+            `INSERT INTO password_reset_tokens
+                (business_id, user_id, token_hash, expires_at)
+             VALUES
+                ($1, $2, $3, NOW() + INTERVAL '30 minutes')`,
+            [user.business_id, user.id, tokenHash]
+        );
+
+        const appUrl = String(
+            process.env.APP_URL || "http://localhost:3000"
+        ).replace(/\/$/, "");
+
+        const resetUrl =
+            `${appUrl}/password-reset/?token=` +
+            encodeURIComponent(rawToken);
+
+        // Development fallback only.
+        if (
+            !process.env.RESEND_API_KEY ||
+            !process.env.RESEND_FROM_EMAIL
+        ) {
+            if (process.env.NODE_ENV !== "production") {
+                return res.json({
+                    message: "Reset link generated in development.",
+                    developmentResetToken: rawToken,
+                    developmentResetUrl: resetUrl
+                });
+            }
+
+            console.error(
+                "PASSWORD RESET EMAIL NOT CONFIGURED",
+                {
+                    hasApiKey: Boolean(process.env.RESEND_API_KEY),
+                    hasFromEmail: Boolean(process.env.RESEND_FROM_EMAIL)
+                }
+            );
+
+            return res.json({
+                message:
+                    "If an active account exists for that email, password reset instructions will be sent."
             });
-        } else if (process.env.NODE_ENV !== "production") {
-            return res.json({ message: "Reset link generated in development.", developmentResetToken: rawToken });
         }
 
-        return res.json({ message: "If an active account exists for that email, password reset instructions will be sent." });
-    } catch (error) {
-        console.error("PASSWORD RESET REQUEST ERROR:", error.message);
+        try {
+            const emailResult = await sendEmail({
+                to: email,
+                subject: "Reset your DukaFlow password",
+                html: `
+                    <div style="font-family:Arial,sans-serif;max-width:620px;margin:auto;padding:24px;color:#111827">
+                        <h2 style="margin:0 0 16px">Reset your DukaFlow password</h2>
+
+                        <p style="line-height:1.6">
+                            We received a request to reset your DukaFlow password.
+                        </p>
+
+                        <p style="margin:24px 0">
+                            <a
+                                href="${resetUrl}"
+                                style="display:inline-block;padding:12px 18px;background:#2563eb;color:#fff;text-decoration:none;border-radius:8px;font-weight:600"
+                            >
+                                Reset Password
+                            </a>
+                        </p>
+
+                        <p style="line-height:1.6;color:#6b7280">
+                            This password reset link expires in 30 minutes.
+                        </p>
+
+                        <p style="line-height:1.6;color:#6b7280">
+                            If you did not request this, you can safely ignore this email.
+                        </p>
+                    </div>
+                `,
+                text:
+                    `Reset your DukaFlow password:\n\n` +
+                    `${resetUrl}\n\n` +
+                    `This link expires in 30 minutes.\n` +
+                    `If you did not request this, you can safely ignore this email.`
+            });
+
+            console.log(
+                "PASSWORD RESET EMAIL SENT",
+                {
+                    recipient: email,
+                    resendId: emailResult?.id || null
+                }
+            );
+        } catch (emailError) {
+            console.error(
+                "PASSWORD RESET EMAIL FAILED",
+                {
+                    message: emailError?.message || "Unknown email error",
+                    status: emailError?.status || emailError?.statusCode || null,
+                    code: emailError?.code || null
+                }
+            );
+
+            // Keep generic response to prevent account enumeration.
+            return res.json({
+                message:
+                    "If an active account exists for that email, password reset instructions will be sent."
+            });
+        }
+
         return res.json({
-            message: "If an active account exists for that email, password reset instructions will be sent."
+            message:
+                "If an active account exists for that email, password reset instructions will be sent."
+        });
+    } catch (error) {
+        console.error(
+            "PASSWORD RESET REQUEST ERROR",
+            {
+                message: error?.message || "Unknown error",
+                code: error?.code || null
+            }
+        );
+
+        return res.json({
+            message:
+                "If an active account exists for that email, password reset instructions will be sent."
         });
     }
 }
