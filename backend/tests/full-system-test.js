@@ -567,12 +567,13 @@ async function main() {
         assert(out.data?.uploadUrl, "R2 upload URL missing.");
     });
 
-    await test("DukaFlow Copilot (Groq)", async () => {
+    await test("DukaFlow Copilot real branch sales", async () => {
         const out = await expect(jar, "POST", "/api/assistant", [200], {
             question: "Nimeuza kiasi gani leo?"
         });
         assert(out.data?.answer, "Copilot returned no answer.");
-        assert(String(out.data?.generatedBy || "").toLowerCase().includes("groq"), "Copilot did not report Groq/tool mode.");
+        assert.equal(out.data?.generatedBy, "DukaFlow PostgreSQL", "Business answers must be grounded in the authenticated branch data.");
+        assert(/Mauzo leo|Sijaona mauzo yaliyorekodiwa leo kwenye tawi hili\./.test(out.data.answer), "Copilot returned neither a sales result nor an explicit empty-period explanation.");
     });
 
     if (TEST_EMAIL) {

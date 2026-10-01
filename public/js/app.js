@@ -37,19 +37,21 @@ function setupDateTime() {
         const now = new Date();
 
         if (dateElement) {
-            dateElement.textContent = now.toLocaleDateString("en-GB", {
-                day: "2-digit",
-                month: "short",
-                year: "numeric"
-            });
+            dateElement.textContent =
+                now.toLocaleDateString("en-GB", {
+                    day: "2-digit",
+                    month: "short",
+                    year: "numeric"
+                });
         }
 
         if (timeElement) {
-            timeElement.textContent = now.toLocaleTimeString("en-GB", {
-                hour: "2-digit",
-                minute: "2-digit",
-                second: "2-digit"
-            });
+            timeElement.textContent =
+                now.toLocaleTimeString("en-GB", {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    second: "2-digit"
+                });
         }
     }
 
@@ -99,10 +101,12 @@ let productSkuInput = null;
 let productBarcodeInput = null;
 let productCategoryInput = null;
 let productUnitInput = null;
+
 let buyingPriceInput = null;
 let sellingPriceInput = null;
 let stockQuantityInput = null;
 let lowStockThresholdInput = null;
+
 let productImageInput = null;
 let productImageKeyInput = null;
 let productImageUrlInput = null;
@@ -139,10 +143,17 @@ function setupProductPage() {
         document.querySelector("#name") ||
         document.querySelector("[name='name']");
 
-    productSkuInput = document.querySelector("#product-sku");
-    productBarcodeInput = document.querySelector("#product-barcode");
-    productCategoryInput = document.querySelector("#product-category");
-    productUnitInput = document.querySelector("#product-unit");
+    productSkuInput =
+        document.querySelector("#product-sku");
+
+    productBarcodeInput =
+        document.querySelector("#product-barcode");
+
+    productCategoryInput =
+        document.querySelector("#product-category");
+
+    productUnitInput =
+        document.querySelector("#product-unit");
 
     buyingPriceInput =
         document.querySelector("#buying-price") ||
@@ -163,10 +174,18 @@ function setupProductPage() {
         document.querySelector("#low-stock-threshold") ||
         document.querySelector("#lowStockThreshold") ||
         document.querySelector("[name='lowStockThreshold']");
-    productImageInput = document.querySelector("#product-image");
-    productImageKeyInput = document.querySelector("#product-image-key");
-    productImageUrlInput = document.querySelector("#product-image-url");
-    productImageStatus = document.querySelector("#product-image-status");
+
+    productImageInput =
+        document.querySelector("#product-image");
+
+    productImageKeyInput =
+        document.querySelector("#product-image-key");
+
+    productImageUrlInput =
+        document.querySelector("#product-image-url");
+
+    productImageStatus =
+        document.querySelector("#product-image-status");
 
     productModalTitle =
         document.querySelector("#product-modal-title") ||
@@ -175,7 +194,9 @@ function setupProductPage() {
     productSubmitButton =
         document.querySelector("#product-submit-button") ||
         document.querySelector("#product-submit-btn") ||
-        document.querySelector("#product-form button[type='submit']");
+        document.querySelector(
+            "#product-form button[type='submit']"
+        );
 
     if (
         !productModal &&
@@ -201,41 +222,126 @@ function setupProductPage() {
 
 function setupProductEvents() {
     document.addEventListener("click", (event) => {
+        const target = event.target;
 
-        const button = event.target.closest(
-            "button, a, [role='button'], [data-close-modal]"
+        /* -------------------------------------------------
+           MODAL BACKDROP
+        ------------------------------------------------- */
+
+        if (
+            productModal &&
+            target === productModal
+        ) {
+            event.preventDefault();
+            closeProductModal();
+            return;
+        }
+
+        /* -------------------------------------------------
+           FIND CLICKED ACTION
+        ------------------------------------------------- */
+
+        const button = target.closest(
+            "button, a, [role='button'], [data-close-modal], [data-edit-product-id], [data-delete-product-id]"
         );
 
         if (!button) {
             return;
         }
 
+        /* -------------------------------------------------
+           CLOSE MODAL
+        ------------------------------------------------- */
 
-        if (button.hasAttribute("data-close-modal")) {
+        if (
+            button.hasAttribute(
+                "data-close-modal"
+            )
+        ) {
             event.preventDefault();
             closeProductModal();
             return;
         }
 
-
-        /* ---------------- ADD PRODUCT ---------------- */
-
-if (
-    button.id === "add-product-btn" ||
-    button.id === "add-product"
-) {
-    event.preventDefault();
-    openAddProductModal();
-    return;
-}
-
-        /* ---------------- BACKDROP CLICK ---------------- */
+        /* -------------------------------------------------
+           ADD PRODUCT
+        ------------------------------------------------- */
 
         if (
-            productModal &&
-            event.target === productModal
+            button.id === "add-product-btn" ||
+            button.id === "add-product"
         ) {
-            closeProductModal();
+            event.preventDefault();
+            openAddProductModal();
+            return;
+        }
+
+        setTimeout(() => {
+    if (
+        productNameInput &&
+        window.innerWidth > 767
+    ) {
+        productNameInput.focus();
+    }
+}, 100);
+
+        /* -------------------------------------------------
+           EDIT PRODUCT
+        ------------------------------------------------- */
+
+        const editButton =
+            button.closest(
+                "[data-edit-product-id]"
+            );
+
+        if (editButton) {
+            event.preventDefault();
+
+            const productId =
+                editButton.getAttribute(
+                    "data-edit-product-id"
+                );
+
+            if (!productId) {
+                showMessage(
+                    "Product ID is missing.",
+                    "error"
+                );
+
+                return;
+            }
+
+            openEditProductModal(productId);
+            return;
+        }
+
+        /* -------------------------------------------------
+           DELETE PRODUCT
+        ------------------------------------------------- */
+
+        const deleteButton =
+            button.closest(
+                "[data-delete-product-id]"
+            );
+
+        if (deleteButton) {
+            event.preventDefault();
+
+            const productId =
+                deleteButton.getAttribute(
+                    "data-delete-product-id"
+                );
+
+            if (!productId) {
+                showMessage(
+                    "Product ID is missing.",
+                    "error"
+                );
+
+                return;
+            }
+
+            deleteProduct(productId);
         }
     });
 }
@@ -246,15 +352,18 @@ if (
    ========================================================= */
 
 function setupProductKeyboard() {
-    document.addEventListener("keydown", (event) => {
-        if (
-            event.key === "Escape" &&
-            productModal &&
-            isProductModalOpen()
-        ) {
-            closeProductModal();
+    document.addEventListener(
+        "keydown",
+        (event) => {
+            if (
+                event.key === "Escape" &&
+                productModal &&
+                isProductModalOpen()
+            ) {
+                closeProductModal();
+            }
         }
-    });
+    );
 }
 
 
@@ -264,7 +373,10 @@ function setupProductKeyboard() {
 
 function openAddProductModal() {
     if (!productModal) {
-        console.error("Product modal not found.");
+        console.error(
+            "Product modal not found."
+        );
+
         return;
     }
 
@@ -275,21 +387,37 @@ function openAddProductModal() {
     }
 
     if (productModalTitle) {
-        productModalTitle.textContent = "Add Product";
+        productModalTitle.textContent =
+            "Add Product";
     }
 
     if (productSubmitButton) {
-        productSubmitButton.textContent = "Add Product";
-        productSubmitButton.disabled = false;
+        productSubmitButton.textContent =
+            "Add Product";
+
+        productSubmitButton.disabled =
+            false;
     }
 
     if (lowStockThresholdInput) {
         lowStockThresholdInput.value = "5";
     }
-    if (productImageInput) productImageInput.value = "";
-    if (productImageKeyInput) productImageKeyInput.value = "";
-    if (productImageUrlInput) productImageUrlInput.value = "";
-    if (productImageStatus) productImageStatus.textContent = "";
+
+    if (productImageInput) {
+        productImageInput.value = "";
+    }
+
+    if (productImageKeyInput) {
+        productImageKeyInput.value = "";
+    }
+
+    if (productImageUrlInput) {
+        productImageUrlInput.value = "";
+    }
+
+    if (productImageStatus) {
+        productImageStatus.textContent = "";
+    }
 
     showProductModal();
 
@@ -305,16 +433,23 @@ function openAddProductModal() {
    OPEN EDIT PRODUCT
    ========================================================= */
 
-function openEditProductModal(productId) {
+function openEditProductModal(
+    productId
+) {
     if (!productModal) {
-        console.error("Product modal not found.");
+        console.error(
+            "Product modal not found."
+        );
+
         return;
     }
 
-    const product = products.find(
-        (item) =>
-            Number(item.id) === Number(productId)
-    );
+    const product =
+        products.find(
+            (item) =>
+                Number(item.id) ===
+                Number(productId)
+        );
 
     if (!product) {
         showMessage(
@@ -325,17 +460,33 @@ function openEditProductModal(productId) {
         return;
     }
 
-    editingProductId = Number(product.id);
+    editingProductId =
+        Number(product.id);
 
     if (productNameInput) {
         productNameInput.value =
             product.name ?? "";
     }
 
-    if (productSkuInput) productSkuInput.value = product.sku ?? "";
-    if (productBarcodeInput) productBarcodeInput.value = product.barcode ?? "";
-    if (productCategoryInput) productCategoryInput.value = product.category ?? "";
-    if (productUnitInput) productUnitInput.value = product.unit ?? "pcs";
+    if (productSkuInput) {
+        productSkuInput.value =
+            product.sku ?? "";
+    }
+
+    if (productBarcodeInput) {
+        productBarcodeInput.value =
+            product.barcode ?? "";
+    }
+
+    if (productCategoryInput) {
+        productCategoryInput.value =
+            product.category ?? "";
+    }
+
+    if (productUnitInput) {
+        productUnitInput.value =
+            product.unit ?? "pcs";
+    }
 
     if (buyingPriceInput) {
         buyingPriceInput.value =
@@ -356,10 +507,27 @@ function openEditProductModal(productId) {
         lowStockThresholdInput.value =
             product.low_stock_threshold ?? 5;
     }
-    if (productImageInput) productImageInput.value = "";
-    if (productImageKeyInput) productImageKeyInput.value = product.image_key || "";
-    if (productImageUrlInput) productImageUrlInput.value = product.image_url || "";
-    if (productImageStatus) productImageStatus.textContent = product.image_key ? "Picha iliyopo itatumika hadi uchague nyingine." : "";
+
+    if (productImageInput) {
+        productImageInput.value = "";
+    }
+
+    if (productImageKeyInput) {
+        productImageKeyInput.value =
+            product.image_key || "";
+    }
+
+    if (productImageUrlInput) {
+        productImageUrlInput.value =
+            product.image_url || "";
+    }
+
+    if (productImageStatus) {
+        productImageStatus.textContent =
+            product.image_key
+                ? "Picha iliyopo itatumika hadi uchague nyingine."
+                : "";
+    }
 
     if (productModalTitle) {
         productModalTitle.textContent =
@@ -393,15 +561,21 @@ function showProductModal() {
         return;
     }
 
-    productModal.classList.add("active");
-    productModal.classList.add("show");
+    productModal.classList.add(
+        "active"
+    );
+
+    productModal.classList.add(
+        "show"
+    );
 
     productModal.setAttribute(
         "aria-hidden",
         "false"
     );
 
-    productModal.style.display = "flex";
+    productModal.style.display =
+        "flex";
 
     document.body.classList.add(
         "modal-open"
@@ -440,7 +614,8 @@ function closeProductModal() {
         "true"
     );
 
-    productModal.style.display = "none";
+    productModal.style.display =
+        "none";
 
     document.body.classList.remove(
         "modal-open"
@@ -453,7 +628,24 @@ function closeProductModal() {
     }
 
     if (lowStockThresholdInput) {
-        lowStockThresholdInput.value = "5";
+        lowStockThresholdInput.value =
+            "5";
+    }
+
+    if (productImageInput) {
+        productImageInput.value = "";
+    }
+
+    if (productImageKeyInput) {
+        productImageKeyInput.value = "";
+    }
+
+    if (productImageUrlInput) {
+        productImageUrlInput.value = "";
+    }
+
+    if (productImageStatus) {
+        productImageStatus.textContent = "";
     }
 
     if (productModalTitle) {
@@ -487,153 +679,189 @@ function isProductModalOpen() {
         productModal.classList.contains(
             "show"
         ) ||
-        productModal.style.display === "flex"
+        productModal.style.display ===
+            "flex"
     );
 }
 
+
+/* =========================================================
+   PRODUCT IMAGE UPLOAD
+   ========================================================= */
 
 async function setupProductImageUpload() {
     if (!productImageInput) {
         return;
     }
 
-    productImageInput.addEventListener("change", async () => {
-        const file = productImageInput.files?.[0];
+    productImageInput.addEventListener(
+        "change",
+        async () => {
+            const file =
+                productImageInput.files?.[0];
 
-        if (!file) {
-            return;
-        }
-
-        /*
-         * Vercel/serverless request body safety:
-         * keep image uploads below 4MB.
-         */
-        if (file.size > 4 * 1024 * 1024) {
-            productImageInput.value = "";
-
-            if (productImageStatus) {
-                productImageStatus.textContent =
-                    "Picha lazima iwe chini ya 4MB.";
+            if (!file) {
+                return;
             }
 
-            return;
-        }
+            /* -------------------------------------------------
+               FILE SIZE
+            ------------------------------------------------- */
 
-        /*
-         * Only allow normal image formats.
-         */
-        if (
-            !/^image\/(png|jpeg|webp|gif)$/i.test(
-                file.type
-            )
-        ) {
-            productImageInput.value = "";
+            if (
+                file.size >
+                4 * 1024 * 1024
+            ) {
+                productImageInput.value =
+                    "";
 
-            if (productImageStatus) {
-                productImageStatus.textContent =
-                    "Aina ya picha haikubaliki. Tumia PNG, JPEG, WEBP au GIF.";
-            }
-
-            return;
-        }
-
-        if (productImageStatus) {
-            productImageStatus.textContent =
-                "Inapakia picha...";
-        }
-
-        try {
-            /*
-             * IMPORTANT:
-             *
-             * We NO LONGER upload directly to the
-             * Cloudflare R2 presigned URL from the browser.
-             *
-             * The browser sends the image to DukaFlow.
-             * DukaFlow uploads it to R2 server-side.
-             */
-            const uploadUrl =
-                "/api/integrations/storage/upload" +
-                `?filename=${encodeURIComponent(file.name)}` +
-                "&folder=products";
-
-            const response = await fetch(
-                uploadUrl,
-                {
-                    method: "POST",
-                    credentials: "include",
-                    headers: {
-                        "Content-Type": file.type,
-                        "Accept": "application/json"
-                    },
-                    body: file
+                if (productImageStatus) {
+                    productImageStatus.textContent =
+                        "Picha lazima iwe chini ya 4MB.";
                 }
-            );
 
-            const payload =
-                await response
-                    .json()
-                    .catch(() => ({}));
-
-            if (!response.ok) {
-                throw new Error(
-                    payload.message ||
-                    "Picha haikupakiwa."
-                );
+                return;
             }
 
-            if (!payload.key) {
-                throw new Error(
-                    "Storage key haikurudi vizuri."
-                );
-            }
+            /* -------------------------------------------------
+               FILE TYPE
+            ------------------------------------------------- */
 
-            /*
-             * Keep both key and view URL so the existing
-             * product form can save the uploaded object.
-             */
-            if (productImageKeyInput) {
-                productImageKeyInput.value =
-                    payload.key;
-            }
+            if (
+                !/^image\/(png|jpeg|webp|gif)$/i.test(
+                    file.type
+                )
+            ) {
+                productImageInput.value =
+                    "";
 
-            if (productImageUrlInput) {
-                productImageUrlInput.value =
-                    payload.publicUrl ||
-                    payload.viewUrl ||
-                    `/api/integrations/storage/view?key=${encodeURIComponent(
-                        payload.key
-                    )}`;
+                if (productImageStatus) {
+                    productImageStatus.textContent =
+                        "Aina ya picha haikubaliki. Tumia PNG, JPEG, WEBP au GIF.";
+                }
+
+                return;
             }
 
             if (productImageStatus) {
                 productImageStatus.textContent =
-                    "✓ Picha imepakiwa.";
+                    "Inapakia picha...";
             }
-        } catch (error) {
-            console.error(
-                "Product image upload error:",
-                error?.message || error
-            );
 
-            if (productImageStatus) {
-                productImageStatus.textContent =
+            try {
+                /*
+                 * Browser -> DukaFlow backend
+                 * DukaFlow backend -> Cloudflare R2
+                 */
+
+                const uploadUrl =
+                    "/api/integrations/storage/upload" +
+                    `?filename=${encodeURIComponent(
+                        file.name
+                    )}` +
+                    "&folder=products";
+
+                const response =
+                    await fetch(
+                        uploadUrl,
+                        {
+                            method: "POST",
+
+                            credentials:
+                                "include",
+
+                            headers: {
+                                "Content-Type":
+                                    file.type,
+
+                                Accept:
+                                    "application/json"
+                            },
+
+                            body: file
+                        }
+                    );
+
+                const payload =
+                    await response
+                        .json()
+                        .catch(
+                            () => ({})
+                        );
+
+                if (!response.ok) {
+                    throw new Error(
+                        payload.message ||
+                        "Picha haikupakiwa."
+                    );
+                }
+
+                if (!payload.key) {
+                    throw new Error(
+                        "Storage key haikurudi vizuri."
+                    );
+                }
+
+                if (
+                    productImageKeyInput
+                ) {
+                    productImageKeyInput.value =
+                        payload.key;
+                }
+
+                if (
+                    productImageUrlInput
+                ) {
+                    productImageUrlInput.value =
+                        payload.publicUrl ||
+                        payload.viewUrl ||
+                        `/api/integrations/storage/view?key=${encodeURIComponent(
+                            payload.key
+                        )}`;
+                }
+
+                if (
+                    productImageStatus
+                ) {
+                    productImageStatus.textContent =
+                        "✓ Picha imepakiwa.";
+                }
+            } catch (error) {
+                console.error(
+                    "Product image upload error:",
                     error?.message ||
-                    "Picha haikupakiwa.";
-            }
+                        error
+                );
 
-            productImageInput.value = "";
+                if (
+                    productImageStatus
+                ) {
+                    productImageStatus.textContent =
+                        error?.message ||
+                        "Picha haikupakiwa.";
+                }
 
-            if (productImageKeyInput) {
-                productImageKeyInput.value = "";
-            }
+                productImageInput.value =
+                    "";
 
-            if (productImageUrlInput) {
-                productImageUrlInput.value = "";
+                if (
+                    productImageKeyInput
+                ) {
+                    productImageKeyInput.value =
+                        "";
+                }
+
+                if (
+                    productImageUrlInput
+                ) {
+                    productImageUrlInput.value =
+                        "";
+                }
             }
         }
-    });
+    );
 }
+
 
 /* =========================================================
    PRODUCT FORM
@@ -647,7 +875,6 @@ function setupProductForm() {
     productForm.addEventListener(
         "submit",
         async (event) => {
-
             event.preventDefault();
             event.stopPropagation();
 
@@ -669,7 +896,8 @@ function setupProductForm() {
             }
 
             if (
-                editingProductId !== null
+                editingProductId !==
+                null
             ) {
                 await updateProduct(
                     editingProductId,
@@ -695,10 +923,21 @@ function getProductFormData() {
             productNameInput?.value
                 .trim() || "",
 
-        sku: productSkuInput?.value.trim() || null,
-        barcode: productBarcodeInput?.value.trim() || null,
-        category: productCategoryInput?.value.trim() || null,
-        unit: productUnitInput?.value.trim() || "pcs",
+        sku:
+            productSkuInput?.value
+                .trim() || null,
+
+        barcode:
+            productBarcodeInput?.value
+                .trim() || null,
+
+        category:
+            productCategoryInput?.value
+                .trim() || null,
+
+        unit:
+            productUnitInput?.value
+                .trim() || "pcs",
 
         buyingPrice:
             Number(
@@ -719,8 +958,14 @@ function getProductFormData() {
             Number(
                 lowStockThresholdInput?.value
             ),
-        imageKey: productImageKeyInput?.value.trim() || null,
-        imageUrl: productImageUrlInput?.value.trim() || null
+
+        imageKey:
+            productImageKeyInput?.value
+                .trim() || null,
+
+        imageUrl:
+            productImageUrlInput?.value
+                .trim() || null
     };
 }
 
@@ -729,7 +974,9 @@ function getProductFormData() {
    VALIDATION
    ========================================================= */
 
-function validateProduct(product) {
+function validateProduct(
+    product
+) {
     if (!product.name) {
         return "Product name is required.";
     }
@@ -798,6 +1045,10 @@ async function loadProducts() {
                 "/api/products",
                 {
                     method: "GET",
+
+                    credentials:
+                        "same-origin",
+
                     headers: {
                         Accept:
                             "application/json"
@@ -812,16 +1063,19 @@ async function loadProducts() {
 
         if (!response.ok) {
             throw new Error(
-                getErrorMessage(result) ||
+                getErrorMessage(
+                    result
+                ) ||
                 `Failed to load products. (${response.status})`
             );
         }
 
         products =
-            normalizeProducts(result);
+            normalizeProducts(
+                result
+            );
 
         renderProducts();
-
     } catch (error) {
         console.error(
             "loadProducts error:",
@@ -834,7 +1088,7 @@ async function loadProducts() {
 
         showMessage(
             error.message ||
-            "Failed to load products.",
+                "Failed to load products.",
             "error"
         );
     }
@@ -842,7 +1096,7 @@ async function loadProducts() {
 
 
 /* =========================================================
-   CREATE
+   CREATE PRODUCT
    ========================================================= */
 
 async function createProduct(
@@ -857,6 +1111,9 @@ async function createProduct(
                 {
                     method: "POST",
 
+                    credentials:
+                        "same-origin",
+
                     headers: {
                         "Content-Type":
                             "application/json",
@@ -879,7 +1136,9 @@ async function createProduct(
 
         if (!response.ok) {
             throw new Error(
-                getErrorMessage(result) ||
+                getErrorMessage(
+                    result
+                ) ||
                 `Failed to create product. (${response.status})`
             );
         }
@@ -888,12 +1147,11 @@ async function createProduct(
 
         showMessage(
             result.message ||
-            "Product added successfully.",
+                "Product added successfully.",
             "success"
         );
 
         await loadProducts();
-
     } catch (error) {
         console.error(
             "createProduct error:",
@@ -902,10 +1160,9 @@ async function createProduct(
 
         showMessage(
             error.message ||
-            "Failed to add product.",
+                "Failed to add product.",
             "error"
         );
-
     } finally {
         setSubmitting(false);
     }
@@ -913,7 +1170,7 @@ async function createProduct(
 
 
 /* =========================================================
-   UPDATE
+   UPDATE PRODUCT
    ========================================================= */
 
 async function updateProduct(
@@ -925,9 +1182,14 @@ async function updateProduct(
     try {
         const response =
             await fetch(
-                `/api/products/${encodeURIComponent(productId)}`,
+                `/api/products/${encodeURIComponent(
+                    productId
+                )}`,
                 {
                     method: "PUT",
+
+                    credentials:
+                        "same-origin",
 
                     headers: {
                         "Content-Type":
@@ -951,7 +1213,9 @@ async function updateProduct(
 
         if (!response.ok) {
             throw new Error(
-                getErrorMessage(result) ||
+                getErrorMessage(
+                    result
+                ) ||
                 `Failed to update product. (${response.status})`
             );
         }
@@ -960,12 +1224,11 @@ async function updateProduct(
 
         showMessage(
             result.message ||
-            "Product updated successfully.",
+                "Product updated successfully.",
             "success"
         );
 
         await loadProducts();
-
     } catch (error) {
         console.error(
             "updateProduct error:",
@@ -974,10 +1237,9 @@ async function updateProduct(
 
         showMessage(
             error.message ||
-            "Failed to update product.",
+                "Failed to update product.",
             "error"
         );
-
     } finally {
         setSubmitting(false);
     }
@@ -985,7 +1247,7 @@ async function updateProduct(
 
 
 /* =========================================================
-   DELETE
+   DELETE PRODUCT
    ========================================================= */
 
 async function deleteProduct(
@@ -1019,9 +1281,14 @@ async function deleteProduct(
     try {
         const response =
             await fetch(
-                `/api/products/${encodeURIComponent(productId)}`,
+                `/api/products/${encodeURIComponent(
+                    productId
+                )}`,
                 {
                     method: "DELETE",
+
+                    credentials:
+                        "same-origin",
 
                     headers: {
                         Accept:
@@ -1037,19 +1304,20 @@ async function deleteProduct(
 
         if (!response.ok) {
             throw new Error(
-                getErrorMessage(result) ||
+                getErrorMessage(
+                    result
+                ) ||
                 `Failed to delete product. (${response.status})`
             );
         }
 
         showMessage(
             result.message ||
-            "Product deleted successfully.",
+                "Product deleted successfully.",
             "success"
         );
 
         await loadProducts();
-
     } catch (error) {
         console.error(
             "deleteProduct error:",
@@ -1058,7 +1326,7 @@ async function deleteProduct(
 
         showMessage(
             error.message ||
-            "Failed to delete product.",
+                "Failed to delete product.",
             "error"
         );
     }
@@ -1084,7 +1352,7 @@ function setupProductSearch() {
 
 
 /* =========================================================
-   RENDER
+   RENDER PRODUCTS
    ========================================================= */
 
 function renderProducts() {
@@ -1100,13 +1368,26 @@ function renderProducts() {
     const filteredProducts =
         products.filter(
             (product) =>
-                [product.name, product.sku, product.barcode, product.category]
+                [
+                    product.name,
+                    product.sku,
+                    product.barcode,
+                    product.category
+                ]
                     .filter(Boolean)
-                    .some((value) => String(value).toLowerCase().includes(searchTerm))
+                    .some(
+                        (value) =>
+                            String(value)
+                                .toLowerCase()
+                                .includes(
+                                    searchTerm
+                                )
+                    )
         );
 
     if (
-        filteredProducts.length === 0
+        filteredProducts.length ===
+        0
     ) {
         productsTableBody.innerHTML = `
             <tr>
@@ -1154,26 +1435,31 @@ function createProductRow(
 ) {
     const buyingPrice =
         Number(
-            product.buying_price || 0
+            product.buying_price ||
+                0
         );
 
     const sellingPrice =
         Number(
-            product.selling_price || 0
+            product.selling_price ||
+                0
         );
 
     const stock =
         Number(
-            product.stock_quantity || 0
+            product.stock_quantity ||
+                0
         );
 
     const threshold =
         Number(
-            product.low_stock_threshold || 0
+            product.low_stock_threshold ||
+                0
         );
 
     const profit =
-        sellingPrice - buyingPrice;
+        sellingPrice -
+        buyingPrice;
 
     const lowStock =
         stock <= threshold;
@@ -1183,29 +1469,86 @@ function createProductRow(
             ? "low-stock"
             : "in-stock";
 
+    const imageHtml =
+        product.image_url
+            ? `
+                <img
+                    class="df-product-thumb-img"
+                    src="${escapeHtml(
+                        product.image_url
+                    )}"
+                    alt=""
+                    loading="lazy"
+                >
+            `
+            : `
+                <span class="df-product-thumb">
+                    ${escapeHtml(
+                        String(
+                            product.name ||
+                                "?"
+                        )
+                            .charAt(0)
+                            .toUpperCase()
+                    )}
+                </span>
+            `;
+
     return `
-        <tr data-product-id="${escapeHtml(product.id)}">
+        <tr data-product-id="${escapeHtml(
+            product.id
+        )}">
 
             <td>
                 <div class="df-product-cell">
-                    ${product.image_url ? `<img class="df-product-thumb-img" src="${escapeHtml(product.image_url)}" alt="" loading="lazy">` : `<span class="df-product-thumb">${escapeHtml(String(product.name || "?").charAt(0).toUpperCase())}</span>`}
-                    <div><strong>${escapeHtml(product.name)}</strong><small>${escapeHtml(product.category || "Bidhaa")}</small></div>
+                    ${imageHtml}
+
+                    <div>
+                        <strong>
+                            ${escapeHtml(
+                                product.name
+                            )}
+                        </strong>
+
+                        <small>
+                            ${escapeHtml(
+                                product.category ||
+                                    "Bidhaa"
+                            )}
+                        </small>
+                    </div>
                 </div>
             </td>
 
-            <td>${escapeHtml(product.sku || "—")}</td>
-            <td>${escapeHtml(product.barcode || "—")}</td>
-
             <td>
-                ${formatCurrency(buyingPrice)}
+                ${escapeHtml(
+                    product.sku || "—"
+                )}
             </td>
 
             <td>
-                ${formatCurrency(sellingPrice)}
+                ${escapeHtml(
+                    product.barcode ||
+                        "—"
+                )}
             </td>
 
             <td>
-                ${formatCurrency(profit)}
+                ${formatCurrency(
+                    buyingPrice
+                )}
+            </td>
+
+            <td>
+                ${formatCurrency(
+                    sellingPrice
+                )}
+            </td>
+
+            <td>
+                ${formatCurrency(
+                    profit
+                )}
             </td>
 
             <td>
@@ -1219,7 +1562,9 @@ function createProductRow(
             </td>
 
             <td>
-                ${formatDate(product.created_at)}
+                ${formatDate(
+                    product.created_at
+                )}
             </td>
 
             <td>
@@ -1228,7 +1573,9 @@ function createProductRow(
                     <button
                         type="button"
                         class="btn btn-sm btn-secondary"
-                        data-edit-product-id="${escapeHtml(product.id)}"
+                        data-edit-product-id="${escapeHtml(
+                            product.id
+                        )}"
                     >
                         Edit
                     </button>
@@ -1236,7 +1583,9 @@ function createProductRow(
                     <button
                         type="button"
                         class="btn btn-sm btn-danger"
-                        data-delete-product-id="${escapeHtml(product.id)}"
+                        data-delete-product-id="${escapeHtml(
+                            product.id
+                        )}"
                     >
                         Delete
                     </button>
@@ -1291,17 +1640,18 @@ function updateProductSummary(
                     const stock =
                         Number(
                             product.stock_quantity ||
-                            0
+                                0
                         );
 
                     const threshold =
                         Number(
                             product.low_stock_threshold ||
-                            0
+                                0
                         );
 
                     return (
-                        stock <= threshold
+                        stock <=
+                        threshold
                     );
                 }
             ).length;
@@ -1313,11 +1663,14 @@ function updateProductSummary(
     if (totalStockElement) {
         const totalStock =
             currentProducts.reduce(
-                (total, product) =>
+                (
+                    total,
+                    product
+                ) =>
                     total +
                     Number(
                         product.stock_quantity ||
-                        0
+                            0
                     ),
                 0
             );
@@ -1326,19 +1679,24 @@ function updateProductSummary(
             totalStock;
     }
 
-    if (inventoryValueElement) {
+    if (
+        inventoryValueElement
+    ) {
         const inventoryValue =
             currentProducts.reduce(
-                (total, product) =>
+                (
+                    total,
+                    product
+                ) =>
                     total +
                     Number(
                         product.buying_price ||
-                        0
+                            0
                     ) *
-                    Number(
-                        product.stock_quantity ||
-                        0
-                    ),
+                        Number(
+                            product.stock_quantity ||
+                                0
+                        ),
                 0
             );
 
@@ -1369,12 +1727,14 @@ function setSubmitting(
             editingProductId !== null
                 ? "Saving..."
                 : "Adding...";
-    } else {
-        productSubmitButton.textContent =
-            editingProductId !== null
-                ? "Save Changes"
-                : "Add Product";
+
+        return;
     }
+
+    productSubmitButton.textContent =
+        editingProductId !== null
+            ? "Save Changes"
+            : "Add Product";
 }
 
 
@@ -1415,7 +1775,8 @@ function getErrorMessage(
     }
 
     if (
-        typeof result === "string"
+        typeof result ===
+        "string"
     ) {
         return result;
     }
@@ -1431,7 +1792,9 @@ function getErrorMessage(
 function normalizeProducts(
     result
 ) {
-    if (Array.isArray(result)) {
+    if (
+        Array.isArray(result)
+    ) {
         return result;
     }
 
@@ -1468,7 +1831,10 @@ function showProductsLoading() {
 
     productsTableBody.innerHTML = `
         <tr>
-            <td colspan="8" class="loading-state">
+            <td
+                colspan="10"
+                class="loading-state"
+            >
                 Loading products...
             </td>
         </tr>
@@ -1477,13 +1843,20 @@ function showProductsLoading() {
 
 
 /* =========================================================
-   FORMAT
+   FORMAT CURRENCY
    ========================================================= */
 
-function formatCurrency(value) {
-    const number = Number(value);
+function formatCurrency(
+    value
+) {
+    const number =
+        Number(value);
 
-    if (!Number.isFinite(number)) {
+    if (
+        !Number.isFinite(
+            number
+        )
+    ) {
         return "TSh 0";
     }
 
@@ -1498,7 +1871,13 @@ function formatCurrency(value) {
 }
 
 
-function formatDate(value) {
+/* =========================================================
+   FORMAT DATE
+   ========================================================= */
+
+function formatDate(
+    value
+) {
     if (!value) {
         return "-";
     }
@@ -1529,7 +1908,9 @@ function formatDate(value) {
    SECURITY
    ========================================================= */
 
-function escapeHtml(value) {
+function escapeHtml(
+    value
+) {
     return String(value)
         .replaceAll(
             "&",
@@ -1607,7 +1988,8 @@ function showMessage(
             "div"
         );
 
-    toast.textContent = message;
+    toast.textContent =
+        String(message);
 
     toast.style.padding =
         "12px 16px";
@@ -1630,12 +2012,16 @@ function showMessage(
     toast.style.fontWeight =
         "600";
 
-    if (type === "success") {
+    if (
+        type === "success"
+    ) {
         toast.style.borderLeft =
             "4px solid #16a34a";
     }
 
-    if (type === "error") {
+    if (
+        type === "error"
+    ) {
         toast.style.borderLeft =
             "4px solid #dc2626";
     }
@@ -1654,7 +2040,6 @@ function showMessage(
         setTimeout(() => {
             toast.remove();
         }, 250);
-
     }, 3500);
 }
 

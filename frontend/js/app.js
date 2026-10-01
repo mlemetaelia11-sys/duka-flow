@@ -535,30 +535,11 @@ async function setupProductImageUpload() {
             productImageStatus.textContent = "Inapakia picha...";
         }
 
-        const isDevelopment =
-            ["localhost", "127.0.0.1"].includes(
-                window.location.hostname
-            );
-
-        const logUpload = (stage, details = {}) => {
-            if (isDevelopment) {
-                console.debug("Product image upload", {
-                    stage,
-                    contentType: file.type,
-                    ...details
-                });
-            }
-        };
-
-        let stage = "presign";
-
         try {
             /*
              * STEP 1:
-             * Ask DukaFlow backend for a presigned R2 upload URL.
-             *
-             * This request stays authenticated because it talks
-             * to our own DukaFlow API.
+             * Authenticate with DukaFlow backend and request
+             * a presigned Cloudflare R2 upload URL.
              */
             const presign = await fetch(
                 "/api/integrations/storage/presign",
@@ -576,10 +557,6 @@ async function setupProductImageUpload() {
                     })
                 }
             );
-
-            logUpload("presign", {
-                httpStatus: presign.status
-            });
 
             const payload =
                 await presign.json().catch(() => ({}));
@@ -602,11 +579,10 @@ async function setupProductImageUpload() {
              * Upload directly to Cloudflare R2.
              *
              * IMPORTANT:
-             * This is a cross-origin request to R2.
-             * It must NOT carry DukaFlow cookies/session credentials.
+             * R2 is cross-origin and the presigned URL already
+             * contains authorization. Do NOT send DukaFlow
+             * cookies/session credentials to R2.
              */
-            stage = "r2-put";
-
             const upload = await fetch(
                 payload.uploadUrl,
                 {
@@ -620,31 +596,26 @@ async function setupProductImageUpload() {
                 }
             );
 
-            logUpload("r2-put", {
-                httpStatus: upload.status
-            });
-
             if (!upload.ok) {
                 let providerMessage = "";
 
                 try {
-                    providerMessage = (
-                        await upload.text()
-                    ).trim();
+                    providerMessage =
+                        (await upload.text()).trim();
                 } catch {
                     providerMessage = "";
                 }
 
                 throw new Error(
                     providerMessage ||
-                    `Upload ya picha imekataliwa na storage. (${upload.status})`
+                    `Upload ya picha imekataa. (${upload.status})`
                 );
             }
 
             /*
              * STEP 3:
-             * Save the storage key/url into the product form only
-             * after R2 confirms success.
+             * Only mark the image as uploaded after R2
+             * confirms HTTP success.
              */
             if (productImageKeyInput) {
                 productImageKeyInput.value = payload.key;
@@ -663,11 +634,6 @@ async function setupProductImageUpload() {
                     "✓ Picha imepakiwa.";
             }
         } catch (error) {
-            logUpload(stage, {
-                errorName: error?.name || "Error",
-                errorMessage: error?.message || "Unknown error"
-            });
-
             if (productImageStatus) {
                 productImageStatus.textContent =
                     error?.message ||

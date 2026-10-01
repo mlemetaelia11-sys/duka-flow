@@ -856,6 +856,40 @@
    DukaFlow platform additions
    ========================================================= */
 
+/* =========================================================
+   MOBILE INPUT ZOOM FIX
+   Prevent mobile browsers from zooming when form fields
+   receive focus inside the Add Product modal.
+   ========================================================= */
+
+@media (max-width: 767px) {
+
+    input,
+    select,
+    textarea,
+    button {
+        font-size: 16px !important;
+    }
+
+    .modal,
+    .product-modal,
+    #product-modal {
+        font-size: 14px;
+    }
+
+    .modal input,
+    .modal select,
+    .modal textarea,
+    .product-modal input,
+    .product-modal select,
+    .product-modal textarea,
+    #product-modal input,
+    #product-modal select,
+    #product-modal textarea {
+        font-size: 16px !important;
+    }
+}
+
 .auth-user-area {
     display: flex;
     align-items: center;
@@ -4503,6 +4537,11 @@ body[data-sidebar-state="open"] .sidebar-backdrop { opacity: 1; visibility: visi
 .df-copilot-message--user { margin-right:max(0px,calc((100% - 780px)/2)); margin-left:auto; background:#eaf4ff; border-color:#d2e6fb; }
 .df-copilot-message--user .df-copilot-message-label { color:#1763af; }
 .df-copilot-user-text { white-space:pre-wrap; }
+.df-copilot-insights { display:grid; grid-template-columns:repeat(auto-fit,minmax(138px,1fr)); gap:9px; margin:0 0 16px; }
+.df-copilot-insight-card { display:grid; min-width:0; gap:4px; padding:11px 12px; border:1px solid #dce8f4; border-top:2px solid #4d98e8; border-radius:9px; background:#f8fbff; }
+.df-copilot-insight-label { color:#6f8094; font-size:10px; font-weight:750; }
+.df-copilot-insight-value { color:#17395e; font-size:17px; line-height:1.3; overflow-wrap:anywhere; }
+.df-copilot-insight-card small { color:#7b8da2; font-size:10px; line-height:1.4; }
 .df-copilot-message--activity { width:100%; background:#f7faff; border-color:#dce9f7; }
 .df-copilot-message--success { background:#f2fbf6; border-color:#ccebd9; }
 .df-copilot-message--error { color:#784044; background:#fff8f7; border-color:#f0d8d5; }

@@ -1,6 +1,16 @@
+"use strict";
+
 const express = require("express");
-const { requireAuth, authorizeRoles } = require("../middleware/authMiddleware");
-const { requireLimit } = require("../middleware/subscriptionMiddleware");
+
+const {
+    requireAuth,
+    authorizeRoles
+} = require("../middleware/authMiddleware");
+
+const {
+    requireActiveSubscription,
+    requireLimit
+} = require("../middleware/subscriptionMiddleware");
 
 const {
     getCustomers,
@@ -19,7 +29,12 @@ const {
 
 const router = express.Router();
 
-router.get("/", requireAuth, authorizeRoles("owner", "manager", "cashier"), getCustomers);
+router.get(
+    "/",
+    requireAuth,
+    authorizeRoles("owner", "manager", "cashier"),
+    getCustomers
+);
 
 router.get(
     "/:id/history",
@@ -28,16 +43,63 @@ router.get(
     getCustomerHistory
 );
 
-router.get("/:id/notes", requireAuth, authorizeRoles("owner", "manager", "cashier"), getCustomerNotes);
-router.post("/:id/notes", requireAuth, authorizeRoles("owner", "manager", "cashier"), createCustomerNote);
-router.delete("/:id/notes/:noteId", requireAuth, authorizeRoles("owner", "manager"), deleteCustomerNote);
+router.get(
+    "/:id/notes",
+    requireAuth,
+    authorizeRoles("owner", "manager", "cashier"),
+    getCustomerNotes
+);
 
-router.get("/:id", requireAuth, authorizeRoles("owner", "manager", "cashier"), getCustomerById);
+router.post(
+    "/:id/notes",
+    requireAuth,
+    authorizeRoles("owner", "manager", "cashier"),
+    requireActiveSubscription,
+    createCustomerNote
+);
 
-router.post("/", requireAuth, authorizeRoles("owner", "manager", "cashier"), requireLimit({ resource: "customers", limitKey: "customer_limit", label: "Customer" }), createCustomer);
+router.delete(
+    "/:id/notes/:noteId",
+    requireAuth,
+    authorizeRoles("owner", "manager"),
+    requireActiveSubscription,
+    deleteCustomerNote
+);
 
-router.put("/:id", requireAuth, authorizeRoles("owner", "manager", "cashier"), updateCustomer);
+router.get(
+    "/:id",
+    requireAuth,
+    authorizeRoles("owner", "manager", "cashier"),
+    getCustomerById
+);
 
-router.delete("/:id", requireAuth, authorizeRoles("owner", "manager"), deleteCustomer);
+router.post(
+    "/",
+    requireAuth,
+    authorizeRoles("owner", "manager", "cashier"),
+    requireActiveSubscription,
+    requireLimit({
+        resource: "customers",
+        limitKey: "customer_limit",
+        label: "Customer"
+    }),
+    createCustomer
+);
+
+router.put(
+    "/:id",
+    requireAuth,
+    authorizeRoles("owner", "manager", "cashier"),
+    requireActiveSubscription,
+    updateCustomer
+);
+
+router.delete(
+    "/:id",
+    requireAuth,
+    authorizeRoles("owner", "manager"),
+    requireActiveSubscription,
+    deleteCustomer
+);
 
 module.exports = router;

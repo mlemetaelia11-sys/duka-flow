@@ -41,6 +41,16 @@
             .replace(/\b\w/g, (letter) => letter.toUpperCase());
     }
 
+    function getSidebarCookieValue() {
+        return document.cookie.match(/(?:^|; )dukaflow_sidebar_state=(open|closed)(?:;|$)/)?.[1] || null;
+    }
+
+    function resolveSidebarDefaultState() {
+        const mobile = window.matchMedia("(max-width: 760px)").matches;
+        const saved = getSidebarCookieValue();
+        return saved ? saved === "open" : !mobile;
+    }
+
     function getLanguage() { const match = document.cookie.match(/(?:^|; )dukaflow_language=([^;]+)/); return match?.[1] === "en" ? "en" : "sw"; }
     function setLanguage(language) { document.cookie = `dukaflow_language=${language === "en" ? "en" : "sw"}; Path=/; Max-Age=31536000; SameSite=Lax`; window.location.reload(); }
     const I18N_NAV = {
@@ -408,48 +418,81 @@
     }
 
     function initializeSidebarState(button, topbar) {
-        const mobile = window.matchMedia("(max-width: 760px)").matches;
-        const saved = document.cookie.match(/(?:^|; )dukaflow_sidebar_state=(open|closed)(?:;|$)/)?.[1];
-        const isOpen = saved ? saved === "open" : !mobile;
-        let backdrop = document.querySelector(".sidebar-backdrop");
-        if (!backdrop) {
-            backdrop = document.createElement("div");
-            backdrop.className = "sidebar-backdrop";
-            backdrop.setAttribute("aria-hidden", "true");
-            document.body.append(backdrop);
-            backdrop.addEventListener("click", () => setSidebarOpen(false, button, topbar));
+        const menuButton = button || document.querySelector(".mobile-menu-toggle");
+        const sidebarTopbar = topbar || document.querySelector(".app-topbar");
+        const backdrop = document.querySelector(".sidebar-backdrop") || (() => {
+            const node = document.createElement("div");
+            node.className = "sidebar-backdrop";
+            node.setAttribute("aria-hidden", "true");
+            document.body.append(node);
+            node.addEventListener("click", () => setSidebarOpen(false, menuButton, sidebarTopbar));
+            return node;
+        })();
+
+        if (!document.body.dataset.sidebarInitialized) {
+            document.body.dataset.sidebarInitialized = "true";
+            document.addEventListener("keydown", (event) => {
+                if (event.key === "Escape" && document.body.dataset.sidebarState === "open") {
+                    setSidebarOpen(false, document.querySelector(".mobile-menu-toggle"), document.querySelector(".app-topbar"));
+                }
+            });
+            window.addEventListener("resize", () => {
+                const saved = getSidebarCookieValue();
+                const nextState = saved ? saved === "open" : !window.matchMedia("(max-width: 760px)").matches;
+                setSidebarOpen(nextState, document.querySelector(".mobile-menu-toggle"), document.querySelector(".app-topbar"), false);
+            });
         }
-        setSidebarOpen(isOpen, button, topbar, false);
-        document.addEventListener("keydown", (event) => {
-            if (event.key === "Escape" && document.body.dataset.sidebarState === "open") {
-                setSidebarOpen(false, button, topbar);
-            }
-        });
+
+        setSidebarOpen(resolveSidebarDefaultState(), menuButton, sidebarTopbar, false);
+        backdrop.setAttribute("aria-hidden", document.body.dataset.sidebarState === "open" ? "false" : "true");
     }
 
     function setSidebarOpen(isOpen, button = document.querySelector(".mobile-menu-toggle"), topbar = document.querySelector(".app-topbar"), persist = true) {
-        document.body.dataset.sidebarState = isOpen ? "open" : "closed";
-        if (!button) return;
+        const shouldOpen = Boolean(isOpen);
+        const currentButton = button || document.querySelector(".mobile-menu-toggle");
         const sidebarBrand = document.querySelector(".sidebar-brand");
         const topbarLeft = topbar?.querySelector(".topbar-left");
-        if (isOpen && sidebarBrand) sidebarBrand.append(button);
-        else if (!isOpen && topbarLeft) {
-            if (persist && button.parentElement === sidebarBrand) {
-                window.setTimeout(() => topbarLeft.prepend(button), 280);
-            } else {
-                topbarLeft.prepend(button);
+
+        document.body.dataset.sidebarState = shouldOpen ? "open" : "closed";
+
+        if (currentButton) {
+            if (shouldOpen && sidebarBrand && currentButton.parentElement !== sidebarBrand) {
+                sidebarBrand.append(currentButton);
             }
+
+            if (!shouldOpen && topbarLeft && currentButton.parentElement !== topbarLeft) {
+                topbarLeft.prepend(currentButton);
+            }
+
+            currentButton.setAttribute("aria-label", shouldOpen ? "Close navigation" : "Open navigation");
+            currentButton.setAttribute("aria-expanded", shouldOpen ? "true" : "false");
+            currentButton.tabIndex = 0;
         }
-        button.setAttribute("aria-label", isOpen ? "Close navigation" : "Open navigation");
-        button.setAttribute("aria-expanded", isOpen ? "true" : "false");
-        button.tabIndex = 0;
-        if (persist) document.cookie = `dukaflow_sidebar_state=${isOpen ? "open" : "closed"}; Path=/; Max-Age=31536000; SameSite=Lax`;
+
+        const backdrop = document.querySelector(".sidebar-backdrop");
+        if (backdrop) {
+            backdrop.setAttribute("aria-hidden", shouldOpen ? "false" : "true");
+        }
+
+        if (persist) {
+            document.cookie = `dukaflow_sidebar_state=${shouldOpen ? "open" : "closed"}; Path=/; Max-Age=31536000; SameSite=Lax`;
+        }
+
+        return shouldOpen;
     }
 
     function toggleSidebar() {
         const button = document.querySelector(".mobile-menu-toggle");
-        setSidebarOpen(document.body.dataset.sidebarState !== "open", button);
+        const currentState = document.body.dataset.sidebarState === "open";
+        setSidebarOpen(!currentState, button);
+        return !currentState;
     }
+
+    window.DukaFlowSidebar = {
+        getState: () => document.body.dataset.sidebarState === "open",
+        setOpen: setSidebarOpen,
+        toggle: toggleSidebar
+    };
 
     function setupSplash() {
         if (isPublicAuthPage || window.location.pathname !== "/") return;

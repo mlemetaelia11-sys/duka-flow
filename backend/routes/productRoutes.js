@@ -1,6 +1,16 @@
+"use strict";
+
 const express = require("express");
-const { requireAuth, authorizeRoles } = require("../middleware/authMiddleware");
-const { requireLimit } = require("../middleware/subscriptionMiddleware");
+
+const {
+    requireAuth,
+    authorizeRoles
+} = require("../middleware/authMiddleware");
+
+const {
+    requireActiveSubscription,
+    requireLimit
+} = require("../middleware/subscriptionMiddleware");
 
 const {
     getProducts,
@@ -12,14 +22,52 @@ const {
 
 const router = express.Router();
 
-router.get("/", requireAuth, authorizeRoles("owner", "manager", "cashier"), getProducts);
+// Viewing products is allowed so the user can still see their catalogue
+// and understand what they have before choosing a plan.
+router.get(
+    "/",
+    requireAuth,
+    authorizeRoles("owner", "manager", "cashier"),
+    getProducts
+);
 
-router.get("/:id", requireAuth, authorizeRoles("owner", "manager", "cashier"), getProductById);
+router.get(
+    "/:id",
+    requireAuth,
+    authorizeRoles("owner", "manager", "cashier"),
+    getProductById
+);
 
-router.post("/", requireAuth, authorizeRoles("owner", "manager"), requireLimit({ resource: "products", limitKey: "product_limit", label: "Product" }), createProduct);
+// Creating a product requires an active subscription and respects
+// the plan's product_limit when one is configured.
+router.post(
+    "/",
+    requireAuth,
+    authorizeRoles("owner", "manager"),
+    requireActiveSubscription,
+    requireLimit({
+        resource: "products",
+        limitKey: "product_limit",
+        label: "Product"
+    }),
+    createProduct
+);
 
-router.put("/:id", requireAuth, authorizeRoles("owner", "manager"), updateProduct);
+// Existing records can only be modified while the subscription is active.
+router.put(
+    "/:id",
+    requireAuth,
+    authorizeRoles("owner", "manager"),
+    requireActiveSubscription,
+    updateProduct
+);
 
-router.delete("/:id", requireAuth, authorizeRoles("owner", "manager"), deleteProduct);
+router.delete(
+    "/:id",
+    requireAuth,
+    authorizeRoles("owner", "manager"),
+    requireActiveSubscription,
+    deleteProduct
+);
 
 module.exports = router;

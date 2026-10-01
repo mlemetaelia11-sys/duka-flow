@@ -1,12 +1,52 @@
 "use strict";
-const express=require("express");
-const {requireAuth,authorizeRoles}=require("../middleware/authMiddleware");
-const c=require("../controllers/branchController");
-const router=express.Router();
+
+const express = require("express");
+
+const {
+    requireAuth,
+    authorizeRoles
+} = require("../middleware/authMiddleware");
+
+const {
+    requireFeature
+} = require("../middleware/subscriptionMiddleware");
+
+const controller = require("../controllers/branchController");
+
+const router = express.Router();
+
 router.use(requireAuth);
-router.get("/",c.listBranches);
-router.get("/current",c.currentBranch);
-router.post("/select",c.selectBranch);
-router.post("/",authorizeRoles("owner"),c.createBranch);
-router.patch("/:id",authorizeRoles("owner"),c.updateBranch);
-module.exports=router;
+
+// Existing branch visibility/context remains available.
+router.get(
+    "/",
+    controller.listBranches
+);
+
+router.get(
+    "/current",
+    controller.currentBranch
+);
+
+// Selecting an existing branch is allowed.
+router.post(
+    "/select",
+    controller.selectBranch
+);
+
+// Creating/managing multiple branches requires the multi_branch feature.
+router.post(
+    "/",
+    authorizeRoles("owner"),
+    requireFeature("multi_branch"),
+    controller.createBranch
+);
+
+router.patch(
+    "/:id",
+    authorizeRoles("owner"),
+    requireFeature("multi_branch"),
+    controller.updateBranch
+);
+
+module.exports = router;

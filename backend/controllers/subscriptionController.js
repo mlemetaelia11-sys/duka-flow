@@ -1,10 +1,110 @@
 "use strict";
-const pool=require("../db");
-function bid(req){const v=Number(req.businessId||req.user?.businessId||req.user?.business_id);return Number.isInteger(v)&&v>0?v:null;}
-async function getPlans(req,res){try{const r=await pool.query(`SELECT id,code,name,price_monthly,price_yearly,product_limit,customer_limit,user_limit,features,is_active FROM subscription_plans WHERE is_active=TRUE ORDER BY price_monthly`);return res.json({plans:r.rows});}catch(e){console.error("PLANS ERROR:",e);return res.status(500).json({message:"Failed to load subscription plans."});}}
-async function getCurrent(req,res){const businessId=bid(req);if(!businessId)return res.status(401).json({message:"Business context is missing."});try{const r=await pool.query(`SELECT s.id,s.status,s.starts_at,s.ends_at,s.trial_ends_at,s.external_reference,p.id AS plan_id,p.code,p.name,p.price_monthly,p.price_yearly,p.product_limit,p.customer_limit,p.user_limit,p.features FROM subscriptions s INNER JOIN subscription_plans p ON p.id=s.plan_id WHERE s.business_id=$1
- AND s.status IN ('trial','active','past_due')
- AND (s.ends_at IS NULL OR s.ends_at > NOW())
- AND (s.trial_ends_at IS NULL OR s.trial_ends_at > NOW())
- ORDER BY s.updated_at DESC LIMIT 1`,[businessId]);return res.json({subscription:r.rows[0]||null});}catch(e){console.error("CURRENT SUBSCRIPTION ERROR:",e);return res.status(500).json({message:"Failed to load subscription."});}}
-module.exports={getPlans,getCurrent};
+
+const pool = require("../db");
+const {
+    getCurrentPlan
+} = require("../middleware/subscriptionMiddleware");
+
+function businessIdFrom(req) {
+    const value = Number(
+        req.businessId ||
+        req.user?.businessId ||
+        req.user?.business_id
+    );
+
+    return Number.isInteger(value) && value > 0
+        ? value
+        : null;
+}
+
+function formatSubscription(plan) {
+    if (!plan) {
+        return null;
+    }
+
+    return {
+        id: plan.subscription_id,
+        status: plan.status,
+        starts_at: plan.starts_at,
+        ends_at: plan.ends_at,
+        trial_ends_at: plan.trial_ends_at,
+        external_reference: plan.external_reference,
+        plan_id: plan.plan_id,
+        code: plan.code,
+        name: plan.name,
+        price_monthly: plan.price_monthly,
+        price_yearly: plan.price_yearly,
+        product_limit: plan.product_limit,
+        customer_limit: plan.customer_limit,
+        user_limit: plan.user_limit,
+        features: plan.features || {}
+    };
+}
+
+async function getPlans(req, res) {
+    try {
+        const result = await pool.query(
+            `
+            SELECT
+                id,
+                code,
+                name,
+                price_monthly,
+                price_yearly,
+                product_limit,
+                customer_limit,
+                user_limit,
+                features,
+                is_active
+            FROM subscription_plans
+            WHERE is_active = TRUE
+            ORDER BY price_monthly ASC
+            `
+        );
+
+        return res.json({
+            plans: result.rows
+        });
+    } catch (error) {
+        console.error(
+            "PLANS ERROR:",
+            error.message
+        );
+
+        return res.status(500).json({
+            message: "Failed to load subscription plans."
+        });
+    }
+}
+
+async function getCurrent(req, res) {
+    const businessId = businessIdFrom(req);
+
+    if (!businessId) {
+        return res.status(401).json({
+            message: "Business context is missing."
+        });
+    }
+
+    try {
+        const plan = await getCurrentPlan(req);
+
+        return res.json({
+            subscription: formatSubscription(plan)
+        });
+    } catch (error) {
+        console.error(
+            "CURRENT SUBSCRIPTION ERROR:",
+            error.message
+        );
+
+        return res.status(500).json({
+            message: "Failed to load subscription."
+        });
+    }
+}
+
+module.exports = {
+    getPlans,
+    getCurrent
+};
